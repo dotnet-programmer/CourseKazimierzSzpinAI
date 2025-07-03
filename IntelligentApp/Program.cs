@@ -1,5 +1,7 @@
 using System.Net.Http.Headers;
 using IntelligentApp.Components;
+using IntelligentApp.Services;
+using IntelligentApp.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +21,7 @@ builder.Services.AddHttpClient("OpenAI", client =>
 builder.Services.AddHttpClient("AzureAI", client =>
 {
 	client.BaseAddress = new Uri(azureEndpoint);
-	client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Ocp-Apim-Subscription-Key", azureApiKey);
+	client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", azureApiKey);
 });
 
 // Add services to the container.
@@ -37,7 +39,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.UseAntiforgery();
 
