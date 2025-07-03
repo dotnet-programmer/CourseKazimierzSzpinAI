@@ -1,0 +1,25 @@
+﻿@page "/my-movies"
+
+<h3>Moje filmy</h3>
+
+<p>Dane wczytane z pliku: @_csvFilePath</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tytuł</th>
+            <th>Rok</th>
+            <th>Gatunek</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in _movies)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.Year</td>
+                <td>@item.Genre</td>
+            </tr>
+        }
+    </tbody>
+</table>
