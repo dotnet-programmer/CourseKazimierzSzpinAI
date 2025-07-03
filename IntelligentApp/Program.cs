@@ -1,6 +1,26 @@
+using System.Net.Http.Headers;
 using IntelligentApp.Components;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var openAiApiKey = builder.Configuration["OpenAI:ApiKey"];
+var openAiEndpoint = builder.Configuration["OpenAI:Endpoint"];
+
+var azureApiKey = builder.Configuration["AzureAI:ApiKey"];
+var azureEndpoint = builder.Configuration["AzureAI:Endpoint"];
+
+builder.Services.AddHttpClient("OpenAI", client =>
+{
+	client.BaseAddress = new Uri(openAiEndpoint);
+	// w ka¿dym requeœcie w headerze bêdie przesy³any ten klucz
+	client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", openAiApiKey);
+});
+
+builder.Services.AddHttpClient("AzureAI", client =>
+{
+	client.BaseAddress = new Uri(azureEndpoint);
+	client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Ocp-Apim-Subscription-Key", azureApiKey);
+});
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
