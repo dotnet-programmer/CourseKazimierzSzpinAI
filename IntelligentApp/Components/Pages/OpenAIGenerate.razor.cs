@@ -1,4 +1,4 @@
-﻿using IntelligentApp.Models;
+﻿using IntelligentApp.Models.OpenAi;
 using Microsoft.AspNetCore.Components;
 
 namespace IntelligentApp.Components.Pages;
