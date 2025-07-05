@@ -7,12 +7,11 @@ namespace IntelligentApp.Components.Pages;
 public partial class AIPlayground
 {
 	private List<string> _availablePrompts = [];
-
+	private List<string> _keyPhrases = [];
 	private bool _isLoading = false;
 	private string _userText = string.Empty;
 	private string _generatedText = string.Empty;
 	private string _sentimentResult = string.Empty;
-	private List<string> _keyPhrases = [];
 
 	[Inject]
 	public IFileReader FileReader { get; set; }
