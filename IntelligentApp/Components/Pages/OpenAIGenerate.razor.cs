@@ -1,6 +1,4 @@
-﻿using IntelligentApp.HttpRepository;
-using IntelligentApp.HttpRepository.Interfaces;
-using IntelligentApp.Models.OpenAi;
+﻿using IntelligentApp.HttpRepository.Interfaces;
 using IntelligentApp.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 
@@ -9,7 +7,6 @@ namespace IntelligentApp.Components.Pages;
 public partial class OpenAIGenerate
 {
 	private List<string> _availablePrompts = [];
-
 	private bool _isLoading = false;
 	private string _userPrompt = string.Empty;
 	private string _generatedText = string.Empty;

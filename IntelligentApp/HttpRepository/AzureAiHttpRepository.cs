@@ -47,29 +47,29 @@ public class AzureAiHttpRepository(IHttpClientFactory httpClientFactory) : IAzur
 			AnalysisInput = new AnalysisInput
 			{
 				Documents = new List<AnalysisDocument>
+				{
+					new AnalysisDocument
 					{
-						new AnalysisDocument
-						{
-							// każde ID musi być unikatowe, tutaj tylko jeden dokument
-							Id = "1",
+						// każde ID musi być unikatowe, tutaj tylko jeden dokument
+						Id = "1",
 
-							// określenie języka dokumentu, w tym przypadku polski
-							Language = "pl",
+						// określenie języka dokumentu, w tym przypadku polski
+						Language = "pl",
 
-							// tekst do analizy sentymentu
-							Text = text
-						}
+						// tekst do analizy sentymentu
+						Text = text
 					}
+				}
 			},
 
 			// możliwość przekazania parametrów:
 			// - wersji modelu
 			// - opcje logowania danych przez Microsoft (wykorzystywane do poprawy jakości modeli AI)
 			Parameters = new Dictionary<string, object>
-				{
-					{ "modelVersion", "latest" },
-					{ "loggingOptOut", false }
-				}
+			{
+				{ "modelVersion", "latest" },
+				{ "loggingOptOut", false }
+			}
 		};
 
 		var httpClient = httpClientFactory.CreateClient("AzureAI");
