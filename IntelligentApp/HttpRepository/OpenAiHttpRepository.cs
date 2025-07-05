@@ -3,14 +3,14 @@ using IntelligentApp.Models.OpenAi;
 
 namespace IntelligentApp.HttpRepository;
 
-public class OpenAiHttpRepository(IHttpClientFactory httpClient) : IOpenAiHttpRepository
+public class OpenAiHttpRepository(IHttpClientFactory httpClientFactory) : IOpenAiHttpRepository
 {
 	public async Task<string> AskOpenAiAsync(string prompt, string aiModel = "gpt-4", int maxTokens = 100, string endpoint = "")
 	{
 		try
 		{
 			// jako parametr podanie nazwy klienta HTTP zdefiniowanego w Program.cs w AddHttpClient()
-			var client = httpClient.CreateClient("OpenAI");
+			var httpClient = httpClientFactory.CreateClient("OpenAI");
 
 			var requestBody = new
 			{
@@ -34,7 +34,7 @@ public class OpenAiHttpRepository(IHttpClientFactory httpClient) : IOpenAiHttpRe
 
 			// wysłanie żądania do OpenAI
 			// pierwszy parametr (endpoint) jest pusty, ponieważ w Program.cs zdefiniowany jest bazowy adres URL klienta HTTP
-			using var response = await client.PostAsJsonAsync(endpoint, requestBody);
+			using var response = await httpClient.PostAsJsonAsync(endpoint, requestBody);
 
 			if (!response.IsSuccessStatusCode)
 			{
