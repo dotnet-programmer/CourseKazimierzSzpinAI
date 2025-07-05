@@ -24,6 +24,8 @@ builder.Services.AddHttpClient("AzureAI", client =>
 	client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", azureApiKey);
 });
 
+builder.Services.AddScoped<IFileReader, FileReaderService>();
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();

@@ -1,4 +1,5 @@
 ﻿using IntelligentApp.Models;
+using IntelligentApp.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 
 namespace IntelligentApp.Components.Pages;
@@ -6,19 +7,17 @@ namespace IntelligentApp.Components.Pages;
 public partial class MyMovies
 {
 	private readonly List<Movie> _movies = [];
-	private string? _csvFilePath;
+	private readonly string _csvFile = "favourite_movies.csv";
 
 	[Inject]
-	public IWebHostEnvironment WebHostEnv { get; set; }
+	public IFileReader FileReader { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
-		_csvFilePath = Path.Combine(WebHostEnv.WebRootPath, "data", "favourite_movies.csv");
-
-		var lines = await File.ReadAllLinesAsync(_csvFilePath);
-		for (int i = 1; i < lines.Length; i++)
+		var lines = await FileReader.ReadAllLinesAsync(_csvFile);
+		foreach (var item in lines)
 		{
-			var values = lines[i].Split(',');
+			var values = item.Split(',');
 			_movies.Add(new()
 			{
 				Title = values?[0].Trim('"') ?? string.Empty,
