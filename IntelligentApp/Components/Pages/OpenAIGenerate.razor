@@ -10,7 +10,7 @@
 <div class="mb-3">
     <label class="mb-2">Wybierz prompt:</label>
     <select class="form-select" @onchange="OnPromptSelected">
-        <option>-- Wybierz --</option>
+        <option disabled="disabled" selected>-- Wybierz --</option>
         @foreach (var item in _availablePrompts)
         {
             <option value="@item">@item</option>
@@ -22,7 +22,7 @@
 @* input użytkownika *@
 <div class="mb-3">
     <label for="promptInput" class="form-label">Prompt:</label>
-    <textarea id="promptInput" class="form-control" rows="3" @bind="_userPrompt"></textarea>
+    <textarea id="promptInput" class="form-control" rows="3" @bind-value="_userPrompt" @bind-value:event="oninput"></textarea>
 </div>
 
 <button class="btn btn-primary" @onclick="GenerateTextAsync">Generuj</button>

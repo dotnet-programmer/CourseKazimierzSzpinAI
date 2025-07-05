@@ -1,5 +1,7 @@
 using System.Net.Http.Headers;
 using IntelligentApp.Components;
+using IntelligentApp.HttpRepository;
+using IntelligentApp.HttpRepository.Interfaces;
 using IntelligentApp.Services;
 using IntelligentApp.Services.Interfaces;
 
@@ -25,6 +27,7 @@ builder.Services.AddHttpClient("AzureAI", client =>
 });
 
 builder.Services.AddScoped<IFileReader, FileReaderService>();
+builder.Services.AddScoped<IOpenAiHttpRepository, OpenAiHttpRepository>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
