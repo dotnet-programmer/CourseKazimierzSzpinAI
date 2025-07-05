@@ -28,6 +28,7 @@ builder.Services.AddHttpClient("AzureAI", client =>
 
 builder.Services.AddScoped<IFileReader, FileReaderService>();
 builder.Services.AddScoped<IOpenAiHttpRepository, OpenAiHttpRepository>();
+builder.Services.AddScoped<IAzureAiHttpRepository, AzureAiHttpRepository>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

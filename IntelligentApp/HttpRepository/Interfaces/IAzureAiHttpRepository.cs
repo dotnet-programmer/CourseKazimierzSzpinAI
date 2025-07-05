@@ -1,0 +1,7 @@
+﻿namespace IntelligentApp.HttpRepository.Interfaces;
+
+public interface IAzureAiHttpRepository
+{
+	Task<string> AnalyzeSentimentAsync(string text);
+	Task<List<string>> ExtractKeyPhrasesAsync(string text);
+}
