@@ -1,0 +1,89 @@
+﻿@page "/opinions-analysis"
+
+@using IntelligentApp.Models
+@using System.Text.Json
+
+<h3>Analiza Opinii Klientów</h3>
+
+<p>Wczytamy opinie z pliku CSV, a następnie przeanalizujemy ich sentyment i kluczowe frazy za pomocą Azure Text Analytics.</p>
+
+<button class="btn btn-primary" @onclick="LoadOpinionsAsync" disabled="@_isLoading">Wczytaj opinie</button>
+
+@if (_opinions.Count > 0)
+{
+    <h4 class="mt-3">Opinie:</h4>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Opinia</th>
+                <th>Sentyment</th>
+                <th>Kluczowe frazy</th>
+                <th>Akcja</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in _opinions)
+            {
+                <tr>
+                    <td>@item.Review</td>
+                    <td>@item.Sentiment</td>
+                    <td>
+                        @if (item.KeyPhrases != null && item.KeyPhrases.Count > 0)
+                        {
+                            <ul>
+                                @foreach (var phrase in item.KeyPhrases)
+                                {
+                                    <li>@phrase</li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-secondary" @onclick="() => AnalyzeOneOpinionAsync(item)" disabled="@_isAnalyzing">Analizuj</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot> 
+            <tr>
+                <th>
+                    Łącznie opinii: @_opinions.Count
+                </th>
+                <th>
+                    Positive: @_opinions.Count(o => o.Sentiment == "positive") <br />
+                    Neutral: @_opinions.Count(o => o.Sentiment == "neutral") <br />
+                    Negative: @_opinions.Count(o => o.Sentiment == "negative")
+                </th>
+                <th>
+                    Kluczowe frazy: 
+                    @if (_opinions.Any(o => o.KeyPhrases != null && o.KeyPhrases.Count > 0))
+                    {
+                        <ul>
+                            @foreach (var phrase in _opinions.SelectMany(o => o.KeyPhrases).Distinct())
+                            {
+                                <li>@phrase</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <u>Brak kluczowych fraz.</u>
+                    }
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <button class="btn btn-success" @onclick="AnalyzeAllOpinionsAsync" disabled="@_isAnalyzing">Analizuj wszystkie opinie</button>
+}
+
+@if (_isLoading)
+{
+    <p class="mt-3">Wczytywanie danych...</p>
+}
+
+@if (_isAnalyzing)
+{
+    <p class="mt-3">Analiza w toku...</p>
+}
