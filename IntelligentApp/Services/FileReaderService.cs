@@ -24,4 +24,7 @@ public class FileReaderService(IWebHostEnvironment webHostEnv) : IFileReader
 		}
 		return result;
 	}
+
+	public async Task<byte[]> ReadImageAsBytes(string fileName) 
+		=> await File.ReadAllBytesAsync(Path.Combine(webHostEnv.WebRootPath, "images", fileName));
 }

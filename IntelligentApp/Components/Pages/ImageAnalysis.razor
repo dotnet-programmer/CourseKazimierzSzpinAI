@@ -1,0 +1,29 @@
+﻿@page "/image-analysis"
+
+@using IntelligentApp.Models
+@using IntelligentApp.Services.Interfaces
+
+<h3>Analiza Obrazu z Azure AI Vision</h3>
+
+<p>Wybierz obraz, a następnie kliknij "Analizuj", aby otrzymać opis (caption) i tagi.</p>
+
+<button class="btn btn-primary mt-3" @onclick="AnalyzeImageAsync">Analizuj</button>
+
+@if (_isLoading)
+{
+    <p class="mt-3">Analizowanie obrazu, proszę czekać...</p>
+}
+else
+{
+    <div class="mt-3">
+        <h4>Wyniki Analizy:</h4>
+        <p class="mt-3"><strong>Opis (Caption):</strong> @_description</p>
+        <p class="mt-3"><strong>Etykiety (Tagi):</strong></p>
+        <ul>
+            @foreach (var tag in _tags)
+            {
+                <li>@tag</li>
+            }
+        </ul>
+    </div>
+}
