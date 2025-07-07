@@ -19,6 +19,7 @@
     <h4>Wgrany obraz:</h4>
     <img src="@_imageDataUrl" alt="wgrany obraz" style="display: block; max-width: 300px; max-height: 300px;" />
     <button class="btn btn-primary mt-3" @onclick="AnalyzeUserImageAsync">Analizuj</button>
+    <button class="btn btn-primary mt-3 ms-2" @onclick="ExtractNameFromCertificateAsync">Pobierz nazwę z certyfikatu</button>
 }
 
 @if (_isLoading)

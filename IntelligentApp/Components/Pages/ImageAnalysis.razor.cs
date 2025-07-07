@@ -1,4 +1,5 @@
 ﻿using IntelligentApp.HttpRepository.Interfaces;
+using IntelligentApp.Models.AzureAi;
 using IntelligentApp.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -45,6 +46,7 @@ public partial class ImageAnalysis
 		_isLoading = true;
 		_showResults = false;
 		_description = string.Empty;
+		_textFromImage = string.Empty;
 		_tags.Clear();
 
 		try
@@ -112,6 +114,84 @@ public partial class ImageAnalysis
 		{
 			Console.WriteLine($"Błąd podczas wczytywania pliku: {ex.Message}.");
 			throw;
+		}
+	}
+
+	private async Task ExtractNameFromCertificateAsync()
+	{
+		if (_selectedFileContent == null)
+		{
+			return;
+		}
+
+		_isLoading = true;
+		_showResults = false;
+		_description = "";
+		_textFromImage = "";
+		_tags.Clear();
+
+		try
+		{
+			var result = await AzureAiHttpRepository.GetImageInfoAsync(_selectedFileContent);
+
+			List<LineData> lines = [];
+
+			// jeśli jest jakiś tekst na obrazie
+			if (result?.ReadResult?.Blocks != null)
+			{
+				foreach (var block in result.ReadResult.Blocks)
+				{
+					foreach (var line in block.Lines)
+					{
+						// określenie współrzędnych "obramowania" dla każdej linii znalezionego tekstu
+						lines.Add(new LineData
+						{
+							Text = line.Text,
+							MinX = line.BoundingPolygon.Min(point => point.X),
+							MaxX = line.BoundingPolygon.Max(point => point.X),
+							MinY = line.BoundingPolygon.Min(point => point.Y),
+							MaxY = line.BoundingPolygon.Max(point => point.Y)
+						});
+					}
+				}
+			}
+
+			if (lines.Count == 0)
+			{
+				_textFromImage = "-";
+			}
+
+			// przybliżony punkt na osi Y żeby dostać się do szukanej linii z tekstem
+			int targetY = 640;
+			// dopuszczalny margines błędu
+			int tolerance = 10;
+
+			// przefiltrowanie linii, które znajdują się w zakresie targetY +/- tolerance
+			var candidate = lines
+				.Where(line => line.MinY >= (targetY - tolerance) && line.MinY <= (targetY + tolerance))
+				.OrderBy(line => line.MinY)
+				.FirstOrDefault();
+
+			if (candidate == null)
+			{
+				tolerance = 20;
+
+				candidate = lines
+					.Where(line => line.MinY >= (targetY - tolerance) && line.MinY <= (targetY + tolerance))
+					.OrderBy(line => line.MinY)
+					.FirstOrDefault();
+			}
+
+			_textFromImage = candidate?.Text;
+		}
+		catch (Exception ex)
+		{
+			_description = $"Błąd analizy obrazu: {ex.Message}";
+		}
+		finally
+		{
+			_isLoading = false;
+			_showResults = true;
 		}
 	}
 }
