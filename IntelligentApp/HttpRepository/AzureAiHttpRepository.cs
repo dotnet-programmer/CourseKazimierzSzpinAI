@@ -42,7 +42,10 @@ public class AzureAiHttpRepository(HttpClient httpClient) : IAzureAiHttpReposito
 	public async Task<ImageAnalysisResponse> GetImageInfoAsync(byte[] image)
 	{
 		// parametr features określa co ma zostać zrobione z obrazem
-		var endpoint = "computervision/imageanalysis:analyze?api-version=2024-02-01&features=caption,tags";
+		// caption - opis obrazu
+		// tags - lista tagów
+		// read - OCR - odczytanie tekstu z obrazu
+		var endpoint = "computervision/imageanalysis:analyze?api-version=2024-02-01&features=caption,tags, read";
 
 		// zawartość żądania to surowe dane binarne
 		using var content = new ByteArrayContent(image);
