@@ -3,15 +3,14 @@ using IntelligentApp.Models.OpenAi;
 
 namespace IntelligentApp.HttpRepository;
 
-public class OpenAiHttpRepository(IHttpClientFactory httpClientFactory) : IOpenAiHttpRepository
+// IHttpClientFactory zamienione na HttpClient, wymagana inna konfiguracja w Program.cs
+//public class OpenAiHttpRepository(IHttpClientFactory httpClientFactory) : IOpenAiHttpRepository
+public class OpenAiHttpRepository(HttpClient httpClient) : IOpenAiHttpRepository
 {
 	public async Task<string> AskOpenAiAsync(string prompt, string aiModel = "gpt-4", int maxTokens = 100, string endpoint = "")
 	{
 		try
 		{
-			// jako parametr podanie nazwy klienta HTTP zdefiniowanego w Program.cs w AddHttpClient()
-			var httpClient = httpClientFactory.CreateClient("OpenAI");
-
 			var requestBody = new
 			{
 				// jaki model AI ma być użyty
@@ -32,14 +31,15 @@ public class OpenAiHttpRepository(IHttpClientFactory httpClientFactory) : IOpenA
 				max_tokens = maxTokens
 			};
 
+			// jako parametr podanie nazwy klienta HTTP zdefiniowanego w Program.cs w AddHttpClient()
+			//var httpClient = httpClientFactory.CreateClient("OpenAI");
+
 			// wysłanie żądania do OpenAI
 			// pierwszy parametr (endpoint) jest pusty, ponieważ w Program.cs zdefiniowany jest bazowy adres URL klienta HTTP
 			using var response = await httpClient.PostAsJsonAsync(endpoint, requestBody);
 
-			if (!response.IsSuccessStatusCode)
-			{
-				return "Przepraszam, nie udało się uzyskać odpowiedzi od AI";
-			}
+			// sprawdzenie czy odpowiedź z serwera jest poprawna
+			response.EnsureSuccessStatusCode();
 
 			// odczytanie odpowiedzi JSON z serwera i rzutowanie na typ ChatCompletionResponse (z dokumentacji)
 			var jsonResponse = await response.Content.ReadFromJsonAsync<ChatCompletionResponse>();

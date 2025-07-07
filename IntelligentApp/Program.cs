@@ -9,7 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 var openAiApiKey = builder.Configuration["OpenAI:ApiKey"];
 var openAiEndpoint = builder.Configuration["OpenAI:Endpoint"];
-
 var azureApiKey = builder.Configuration["AzureAI:ApiKey"];
 var azureEndpoint = builder.Configuration["AzureAI:Endpoint"];
 
@@ -19,16 +18,27 @@ builder.Services.AddHttpClient("OpenAI", client =>
 	// w ka¿dym requeœcie w headerze bêdie przesy³any ten klucz
 	client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", openAiApiKey);
 });
-
 builder.Services.AddHttpClient("AzureAI", client =>
 {
 	client.BaseAddress = new Uri(azureEndpoint);
 	client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", azureApiKey);
 });
 
+// dodatkowa konfiguracja umo¿liwiaj¹ca korzystanie w repozytoriach z HttpClient bezpoœrednio
+builder.Services.AddScoped<IOpenAiHttpRepository, OpenAiHttpRepository>(sp =>
+{
+	var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+	var httpClient = httpClientFactory.CreateClient("OpenAI");
+	return new OpenAiHttpRepository(httpClient);
+});
+builder.Services.AddScoped<IAzureAiHttpRepository, AzureAiHttpRepository>(sp =>
+{
+	var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+	var httpClient = httpClientFactory.CreateClient("AzureAI");
+	return new AzureAiHttpRepository(httpClient);
+});
+
 builder.Services.AddScoped<IFileReader, FileReaderService>();
-builder.Services.AddScoped<IOpenAiHttpRepository, OpenAiHttpRepository>();
-builder.Services.AddScoped<IAzureAiHttpRepository, AzureAiHttpRepository>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

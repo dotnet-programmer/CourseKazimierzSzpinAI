@@ -1,0 +1,60 @@
+﻿@page "/advanced-analysis"
+
+@using IntelligentApp.Models.OpenAi
+@using IntelligentApp.Services.Interfaces
+
+<h3>Zaawansowana Analiza</h3>
+
+<p>Wybierz tryb analizy tekstu:</p>
+<div class="mb-3">
+    <select class="form-select" @bind="_requestKind">
+        <option value="summary">Streszczenie</option>
+        <option value="qa">Q&A</option>
+    </select>
+</div>
+
+@if (_requestKind == OpenAiRequestKind.Summary)
+{
+    <p>W trybie streszczenia podaj tekst źródłowy, a my wygenerujemy krótkie streszczenie i przeanalizujemy je sentymentowo.</p>
+    <div class="mb-3">
+        <label class="form-label">Tekst do streszczenia:</label>
+        <textarea class="form-control" @bind="_baseText" rows="5"></textarea>
+    </div>
+}
+else if (_requestKind == OpenAiRequestKind.QA)
+{
+    <p>W trybie Q&A podaj tekst źródłowy oraz pytanie. Odpowiemy na pytanie z OpenAI, a następnie przeanalizujemy odpowiedź.</p>
+    <div class="mb-3">
+        <label class="form-label">Tekst źródłowy:</label>
+        <textarea class="form-control" @bind="_baseText" rows="5"></textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Pytanie:</label>
+        <input class="form-control" @bind="_userPrompt" />
+    </div>
+}
+
+<button class="btn btn-primary" @onclick="ProcessTextAsync" disabled="@_isLoading">Przetwarzaj</button>
+
+@if (_isLoading)
+{
+    <p class="mt-3">Przetwarzanie... Proszę czekać.</p>
+}
+else
+{
+    <h4 class="mt-3">Wynik OpenAI:</h4>
+    <p>@_generatedText</p>
+
+    <h4>Analiza Tekstu (Azure):</h4>
+    <p><strong>Sentyment:</strong> @_sentimentResult</p>
+    @if (_keyPhrases != null && _keyPhrases.Count > 0)
+    {
+        <p><strong>Kluczowe Frazy:</strong></p>
+        <ul>
+            @foreach (var phrase in _keyPhrases)
+            {
+                <li>@phrase</li>
+            }
+        </ul>
+    }
+}

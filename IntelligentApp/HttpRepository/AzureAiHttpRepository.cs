@@ -4,13 +4,15 @@ using IntelligentApp.Models.AzureAi;
 
 namespace IntelligentApp.HttpRepository;
 
-public class AzureAiHttpRepository(IHttpClientFactory httpClientFactory) : IAzureAiHttpRepository
+// IHttpClientFactory zamienione na HttpClient, wymagana inna konfiguracja w Program.cs
+//public class AzureAiHttpRepository(IHttpClientFactory httpClientFactory) : IAzureAiHttpRepository
+public class AzureAiHttpRepository(HttpClient httpClient) : IAzureAiHttpRepository
 {
 	public async Task<string> AnalyzeSentimentAsync(string text)
 	{
 		try
 		{
-			var response = await AnalyzeText(text, AzureRequestKind.SentimentAnalysis);
+			var response = await AnalyzeTextAsync(text, AzureRequestKind.SentimentAnalysis);
 
 			// odczytanie pierwszego dokumentu z odpowiedzi i zwrócenie wyniku analizy sentymentu, jeśli nie ma to zwrócenie "unknown"
 			return response?[0]?.Sentiment ?? "unknown";
@@ -25,7 +27,7 @@ public class AzureAiHttpRepository(IHttpClientFactory httpClientFactory) : IAzur
 	{
 		try
 		{
-			var response = await AnalyzeText(text, AzureRequestKind.KeyPhraseExtraction);
+			var response = await AnalyzeTextAsync(text, AzureRequestKind.KeyPhraseExtraction);
 
 			// odczytanie pierwszego dokumentu z odpowiedzi i zwrócenie słów kluczowych, jeśli nie ma to zwrócenie pustej listy
 			return response?[0]?.KeyPhrases ?? [];
@@ -36,7 +38,7 @@ public class AzureAiHttpRepository(IHttpClientFactory httpClientFactory) : IAzur
 		}
 	}
 
-	private async Task<List<AnalyzeTextDocument>?> AnalyzeText(string text, AzureRequestKind requestKind)
+	private async Task<List<AnalyzeTextDocument>?> AnalyzeTextAsync(string text, AzureRequestKind requestKind)
 	{
 		var requestBody = new AnalyzeTextRequest
 		{
@@ -72,7 +74,7 @@ public class AzureAiHttpRepository(IHttpClientFactory httpClientFactory) : IAzur
 			}
 		};
 
-		var httpClient = httpClientFactory.CreateClient("AzureAI");
+		//var httpClient = httpClientFactory.CreateClient("AzureAI");
 
 		// doklejenie adresu endpointa do adresu bazowego klienta HTTP zdefiniowanego w Program.cs
 		var endpoint = "language/:analyze-text?api-version=2024-11-01";
