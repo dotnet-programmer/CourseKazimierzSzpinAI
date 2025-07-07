@@ -1,0 +1,57 @@
+﻿@page "/advanced-text-generation"
+
+@using IntelligentApp.Models
+@using IntelligentApp.Models.OpenAi
+
+<h3>Zaawansowane Generowanie Tekstu</h3>
+
+<p>Wybierz tryb generowania tekstu:</p>
+
+<div class="mb-3">
+    <select class="form-select" @bind="_requestKind">
+        <option value="@OpenAiRequestKind.Normal">Normalne Generowanie</option>
+        <option value="@OpenAiRequestKind.Summary">Streszczenie</option>
+        <option value="@OpenAiRequestKind.QA">Q&A podstawie tekstu</option>
+    </select>
+</div>
+
+@if (_requestKind == OpenAiRequestKind.QA)
+{
+    <p>W trybie Q&A podaj dłuższy tekst (np. artykuł) oraz zadaj pytanie.</p>
+    <div class="mb-3">
+        <label class="form-label">Tekst do analizy (np. z artykułu):</label>
+        <textarea class="form-control" rows="5" @bind="_baseText"></textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Pytanie:</label>
+        <input class="form-control" @bind="_userPrompt" />
+    </div>
+}
+else if (_requestKind == OpenAiRequestKind.Summary)
+{
+    <p>W trybie streszczenia podaj dłuższy tekst, których chcesz zreasumować.</p>
+    <div class="mb-3">
+        <label class="form-label">Tekst do streszczenia:</label>
+        <textarea class="form-control" rows="5" @bind="_baseText"></textarea>
+    </div>
+}
+else
+{
+    <p>W trybie normalnym podaj prompt.</p>
+    <div class="mb-3">
+        <label class="form-label">Prompt:</label>
+        <textarea class="form-control" rows="3" @bind="_userPrompt"></textarea>
+    </div>
+}
+
+<button class="btn btn-primary" disabled="@_isLoading" @onclick="GenerateTextAsync">Generuj</button>
+
+@if (_isLoading)
+{
+    <p class="mt-3">Przetwarzanie... proszę czekać.</p>
+}
+else
+{
+    <h4 class="mt-3">Wynik:</h4>
+    <p>@_generatedText</p>
+}

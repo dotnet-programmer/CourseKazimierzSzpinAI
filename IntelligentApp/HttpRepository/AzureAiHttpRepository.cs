@@ -36,12 +36,12 @@ public class AzureAiHttpRepository(IHttpClientFactory httpClientFactory) : IAzur
 		}
 	}
 
-	private async Task<List<AnalyzeTextDocument>?> AnalyzeText(string text, AzureRequestKind requestType)
+	private async Task<List<AnalyzeTextDocument>?> AnalyzeText(string text, AzureRequestKind requestKind)
 	{
 		var requestBody = new AnalyzeTextRequest
 		{
 			// rodzaj operacji
-			Kind = requestType.ToString(),
+			Kind = requestKind.ToString(),
 
 			// dane wejściowe z listą dokumentów do analizy
 			AnalysisInput = new AnalysisInput
