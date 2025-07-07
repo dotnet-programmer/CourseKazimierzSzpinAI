@@ -11,7 +11,7 @@ public partial class ImageAnalysis
 	private bool _isLoading = false;
 	private bool _showResults = false;
 	private string _description = string.Empty;
-	private string _textFromImage;
+	private string _textFromImage = string.Empty;
 
 	// do zapisania przekazanego pliku, żeby wykorzystać go w metodzie analizującej
 	private byte[] _selectedFileContent;
@@ -71,7 +71,7 @@ public partial class ImageAnalysis
 				{
 					foreach (var line in block.Lines)
 					{
-						_textFromImage += $"Linia: {line.Text}";
+						_textFromImage += $"Linia: {line.Text}{Environment.NewLine}";
 					}
 				}
 			}
