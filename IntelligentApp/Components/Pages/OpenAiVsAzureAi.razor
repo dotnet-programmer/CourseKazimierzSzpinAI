@@ -1,0 +1,32 @@
+﻿@page "/openai-vs-azure-ai"
+
+<h3>OpenAi Vs AzureAi</h3>
+
+<p>Wprowadź tekst źródłowy, zostanie wygenerowane streszczenie z OpenAI i porównane z kluczowymi frazami z AzureAi.</p>
+<div class="mb-3">
+    <label class="form-label">Tekst do streszczenia:</label>
+    <textarea class="form-control" @bind="_baseText" rows="5"></textarea>
+</div>
+
+<button class="btn btn-primary mt-3" @onclick="ProcessTextAsync" disabled="@_isLoading">Przetwarzaj</button>
+
+@if (_isLoading)
+{
+    <p class="mt-3">Przetwarzanie... proszę czekać.</p>
+}
+else
+{
+    <h4 class="mt-3">Wynik OpenAI:</h4>
+    <p>@(HighlightKeyPhrases(_generatedText, _keyPhrases))</p>
+
+    @if (_keyPhrases != null && _keyPhrases.Count > 0)
+    {
+        <p><strong>Kluczowe frazy z AzureAI:</strong></p>
+        <ul>
+            @foreach (var phrase in _keyPhrases)
+            {
+                <li>@phrase</li>
+            }
+        </ul>
+    }
+}
