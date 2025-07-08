@@ -15,21 +15,21 @@ public partial class ImageAnalysis
 	private string _textFromImage = string.Empty;
 
 	// do zapisania przekazanego pliku, żeby wykorzystać go w metodzie analizującej
-	private byte[] _selectedFileContent;
+	private byte[]? _selectedFileContent;
 
 	// adres URL do obrazu żeby wyświetlić go w komponencie IMG na stronie, obraz nie będzie zapisywany na serwerze
-	private string _imageDataUrl;
+	private string _imageDataUrl = string.Empty;
 
 	[Inject]
-	public IFileReader FileReader { get; set; }
+	protected IFileReader FileReader { get; set; } = default!;
 
 	[Inject]
-	public IAzureAiHttpRepository AzureAiHttpRepository { get; set; }
+	protected IAzureAiHttpRepository AzureAiHttpRepository { get; set; } = default!;
 
 	private async Task AnalyzeImageFromServer()
 	{
 		// pobranie tablicy bajtów z pliku obrazu
-		var fileBytes = await FileReader.ReadImageAsBytes("nazwa.png");
+		var fileBytes = await FileReader.ReadImageAsBytesAsync("nazwa.png");
 		await AnalyzeImageAsync(fileBytes);
 	}
 
@@ -43,18 +43,14 @@ public partial class ImageAnalysis
 
 	private async Task AnalyzeImageAsync(byte[] fileBytes)
 	{
-		_isLoading = true;
-		_showResults = false;
-		_description = string.Empty;
-		_textFromImage = string.Empty;
-		_tags.Clear();
+		ClearFields();
 
 		try
 		{
 			var result = await AzureAiHttpRepository.GetImageInfoAsync(fileBytes);
 
 			// odczytanie opisu obrazu
-			_description = result?.CaptionResult.Text ?? "";
+			_description = result?.CaptionResult.Text ?? string.Empty;
 
 			// odczytanie tagów obrazu
 			if (result?.TagsResult != null)
@@ -84,8 +80,7 @@ public partial class ImageAnalysis
 		}
 		finally
 		{
-			_isLoading = false;
-			_showResults = true;
+			ShowResult();
 		}
 	}
 
@@ -98,13 +93,8 @@ public partial class ImageAnalysis
 			// pobranie pliku z argumentu
 			var file = e.File;
 
-			using MemoryStream ms = new();
-			// odczytanie zawartości pliku i skopiowanie go do strumienia w pamięci
-			// oddatkowo ustawiony maksymalny rozmiar pliku na 10 mb, jak będzie większy to zgłoszony wyjątek
-			await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(ms);
-
 			// do zapisania przekazanego pliku jako tablicy bajtów, żeby wykorzystać go w metodzie analizującej
-			_selectedFileContent = ms.ToArray();
+			_selectedFileContent = await FileReader.ReadInputAsBytesAsync(file);
 
 			// zbudowanie adresu URL do pliku
 			var base64 = Convert.ToBase64String(_selectedFileContent);
@@ -124,11 +114,7 @@ public partial class ImageAnalysis
 			return;
 		}
 
-		_isLoading = true;
-		_showResults = false;
-		_description = "";
-		_textFromImage = "";
-		_tags.Clear();
+		ClearFields();
 
 		try
 		{
@@ -182,7 +168,7 @@ public partial class ImageAnalysis
 					.FirstOrDefault();
 			}
 
-			_textFromImage = candidate?.Text;
+			_textFromImage = candidate?.Text ?? string.Empty;
 		}
 		catch (Exception ex)
 		{
@@ -190,8 +176,22 @@ public partial class ImageAnalysis
 		}
 		finally
 		{
-			_isLoading = false;
-			_showResults = true;
+			ShowResult();
 		}
+	}
+
+	private void ClearFields()
+	{
+		_isLoading = true;
+		_showResults = false;
+		_description = string.Empty;
+		_textFromImage = string.Empty;
+		_tags.Clear();
+	}
+
+	private void ShowResult()
+	{
+		_isLoading = false;
+		_showResults = true;
 	}
 }
