@@ -1,0 +1,15 @@
+﻿@page "/audio-record"
+
+<h3>Rejestracja Audio</h3>
+
+<button class="btn btn-primary" @onclick="StartRecordingAsync" disabled="@_isRecording">Start</button>
+<button class="btn btn-secondary" @onclick="StopRecordingAsync" disabled="@(!_isRecording)">Stop</button>
+
+@if (!string.IsNullOrWhiteSpace(_audioDataUrl))
+{
+    <h4 class="mt-3">Nagrane audio:</h4>
+    <audio controls>
+        <source src="@_audioDataUrl" type="audio/wav" />
+        Przeglądarka nie obsługje elementu audio
+    </audio>
+}

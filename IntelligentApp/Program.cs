@@ -44,6 +44,19 @@ builder.Services.AddScoped<IFileReader, FileReaderService>();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Zwiêkszenie dopuszczalnego rozmiaru komunikatów w blazor server, potrzebne do przesy³ania wiêkszych plików np. audio
+builder.Services
+	.AddServerSideBlazor()
+	.AddHubOptions(x =>
+	{
+		x.MaximumReceiveMessageSize = 10 * 1024 * 1024;//10MB
+		x.ClientTimeoutInterval = TimeSpan.FromMinutes(5);
+	})
+	.AddCircuitOptions(x =>
+	{
+		x.JSInteropDefaultCallTimeout = TimeSpan.FromMinutes(5);
+	});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
