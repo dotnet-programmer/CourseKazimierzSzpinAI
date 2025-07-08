@@ -1,0 +1,23 @@
+﻿@page "/text-to-speech"
+
+@using IntelligentApp.Services.Interfaces
+
+<h3>TTS</h3>
+
+<p>Wpisz tekst, a następnie wygenerujemy audio z jego syntezą (TTS).</p>
+
+<div class="mb-3">
+    <label for="textInput" class="form-label">Tekst do syntezy mowy:</label>
+    <textarea id="textInput" class="form-control" @bind="_textForTTS" rows="3"></textarea>
+</div>
+
+<button class="btn btn-primary" @onclick="SynthesizeSpeechAsync">Syntezuj</button>
+
+@if (!string.IsNullOrWhiteSpace(_audioDataUrl))
+{
+    <h4 class="mt-3">Wygenerowany dźwięk:</h4>
+    <audio controls>
+        <source src="@_audioDataUrl" type="audio/wav" />
+        Przeglądarka nie obsługje elementu audio
+    </audio>
+}

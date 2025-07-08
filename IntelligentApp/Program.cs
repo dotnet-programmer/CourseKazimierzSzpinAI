@@ -9,8 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 var openAiApiKey = builder.Configuration["OpenAI:ApiKey"];
 var openAiEndpoint = builder.Configuration["OpenAI:Endpoint"];
+
 var azureApiKey = builder.Configuration["AzureAI:ApiKey"];
 var azureEndpoint = builder.Configuration["AzureAI:Endpoint"];
+
+var azureSpeechApiKey = builder.Configuration["AzureSpeech:ApiKey"];
+var azureSpeechTTSEndpoint = builder.Configuration["AzureSpeech:TTSEndpoint"];
+var azureSpeechSTTEndpoint = builder.Configuration["AzureSpeech:STTEndpoint"];
 
 builder.Services.AddHttpClient("OpenAI", client =>
 {
@@ -22,6 +27,16 @@ builder.Services.AddHttpClient("AzureAI", client =>
 {
 	client.BaseAddress = new Uri(azureEndpoint);
 	client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", azureApiKey);
+});
+builder.Services.AddHttpClient("AzureSpeechTTS", client =>
+{
+	client.BaseAddress = new Uri(azureSpeechTTSEndpoint);
+	client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", azureSpeechApiKey);
+});
+builder.Services.AddHttpClient("AzureSpeechSTT", client =>
+{
+	client.BaseAddress = new Uri(azureSpeechSTTEndpoint);
+	client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", azureSpeechApiKey);
 });
 
 // dodatkowa konfiguracja umo¿liwiaj¹ca korzystanie w repozytoriach z HttpClient bezpoœrednio
@@ -36,6 +51,13 @@ builder.Services.AddScoped<IAzureAiHttpRepository, AzureAiHttpRepository>(sp =>
 	var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
 	var httpClient = httpClientFactory.CreateClient("AzureAI");
 	return new AzureAiHttpRepository(httpClient);
+});
+builder.Services.AddScoped<IAzureSpeechHttpRepository, AzureSpeechHttpRepository>(sp =>
+{
+	var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+	var httpClientTTS = httpClientFactory.CreateClient("AzureSpeechTTS");
+	var httpClientSTT = httpClientFactory.CreateClient("AzureSpeechSTT");
+	return new AzureSpeechHttpRepository(httpClientTTS, httpClientSTT);
 });
 
 builder.Services.AddScoped<IFileReader, FileReaderService>();
