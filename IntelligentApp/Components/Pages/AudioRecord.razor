@@ -1,7 +1,8 @@
 ﻿@page "/audio-record"
 
-<h3>Rejestracja Audio</h3>
+<PageTitle>Rejestracja Audio</PageTitle>
 
+<h3>Rejestracja Audio</h3>
 <button class="btn btn-primary" @onclick="StartRecordingAsync" disabled="@_isRecording">Start</button>
 <button class="btn btn-secondary" @onclick="StopRecordingAsync" disabled="@(!_isRecording)">Stop</button>
 

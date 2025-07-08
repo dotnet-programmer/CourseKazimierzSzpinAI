@@ -1,12 +1,9 @@
 ﻿@page "/voice-assistant"
 
-@using IntelligentApp.Services.Interfaces
-@using System.Diagnostics
+<PageTitle>Asystent Głosowy</PageTitle>
 
 <h3>Asystent Głosowy</h3>
-
 <p>Kliknij "Nagraj" i zadaj pytanie głosem, potem "Stop". Następnie kliknij "Odpowiedz", by wysłać zapytanie do OpenAI. Odpowiedź zostanie wygenerowana i odtworzona głosowo.</p>
-
 <div class="mb-3">
     <button class="btn btn-primary" @onclick="StartRecordingAsync" disabled="@_isRecording">Nagraj</button>
     <button class="btn btn-secondary" @onclick="StopRecordingAsync" disabled="@(!_isRecording)">Stop</button>

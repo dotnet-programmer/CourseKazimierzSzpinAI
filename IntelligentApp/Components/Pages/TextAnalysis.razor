@@ -1,12 +1,9 @@
 ﻿@page "/text-analysis"
 
-@using IntelligentApp.Models
-@using System.Text.Json
+<PageTitle>Analiza Tekstu (Sentiment, Key Phrases)</PageTitle>
 
 <h3>Analiza Tekstu (Sentiment, Key Phrases)</h3>
-
 <p>Wprowadź tekst, a my przeanalizujemy jego sentyment i wyodrębnimy kluczowe frazy za pomocą Azure AI Services.</p>
-
 <div class="mb-3">
     <label for="textInput" class="form-label">Tekst do analizy:</label>
     <textarea id="textInput" class="form-control" rows="3" @bind="_userText"></textarea>

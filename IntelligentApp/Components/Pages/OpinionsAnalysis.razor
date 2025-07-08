@@ -1,12 +1,9 @@
 ﻿@page "/opinions-analysis"
 
-@using IntelligentApp.Models
-@using System.Text.Json
+<PageTitle>Analiza Opinii Klientów</PageTitle>
 
 <h3>Analiza Opinii Klientów</h3>
-
 <p>Wczytamy opinie z pliku CSV, a następnie przeanalizujemy ich sentyment i kluczowe frazy za pomocą Azure Text Analytics.</p>
-
 <button class="btn btn-primary" @onclick="LoadOpinionsAsync" disabled="@_isLoading">Wczytaj opinie</button>
 
 @if (_opinions.Count > 0)

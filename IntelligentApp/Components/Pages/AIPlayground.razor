@@ -1,10 +1,10 @@
 ﻿@page "/ai-playground"
 
-<h3>Generowanie tekstu z GPT-4 + Analiza Tekstu (Sentiment, Key Phrases)</h3>
+<PageTitle>AI Playground</PageTitle>
 
+<h3>Generowanie tekstu z GPT-4 + Analiza Tekstu (Sentiment, Key Phrases)</h3>
 <p>Wpisz poniżej prompt (pytanie lub polecenie), a następnie kliknij przycisk, aby wygenerować odpowiedź od GPT-4 (OpenAI).</p>
 <p>Dodatkowo zostanie przeanalizowany jego sentyment i wyodrębnione kluczowe frazy za pomocą Azure AI Services.</p>
-
 <div class="mb-3">
     <label class="mb-2">Wybierz prompt:</label>
     <select class="form-select" @onchange="OnPromptSelected">

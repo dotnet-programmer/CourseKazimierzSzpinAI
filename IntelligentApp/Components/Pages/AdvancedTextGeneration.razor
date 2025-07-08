@@ -1,12 +1,10 @@
 ﻿@page "/advanced-text-generation"
-
-@using IntelligentApp.Models
 @using IntelligentApp.Models.OpenAi
 
+<PageTitle>Zaawansowane Generowanie Tekstu</PageTitle>
+
 <h3>Zaawansowane Generowanie Tekstu</h3>
-
 <p>Wybierz tryb generowania tekstu:</p>
-
 <div class="mb-3">
     <select class="form-select" @bind="_requestKind">
         <option value="@OpenAiRequestKind.Normal">Normalne Generowanie</option>

@@ -1,15 +1,12 @@
 ﻿@page "/image-analysis"
 
-@using IntelligentApp.Models
-@using IntelligentApp.Services.Interfaces
+<PageTitle>Analiza Obrazu</PageTitle>
 
 <h3>Analiza Obrazu z Azure AI Vision</h3>
-
 <p>Testowa analiza obrazu znajdującego się na dysku</p>
 <button class="btn btn-primary mt-1" @onclick="AnalyzeImageFromServer">Analizuj</button>
 
 <p class="mt-3">Wybierz obraz, a następnie kliknij "Analizuj", aby otrzymać opis (caption) i tagi.</p>
-
 <div class="mb-3">
     <InputFile OnChange="OnFileSelectedAsync" accept="image/*" />
 </div>

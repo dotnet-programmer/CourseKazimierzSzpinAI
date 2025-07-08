@@ -1,11 +1,9 @@
 ﻿@page "/text-to-speech"
 
-@using IntelligentApp.Services.Interfaces
+<PageTitle>TTS</PageTitle>
 
 <h3>TTS</h3>
-
 <p>Wpisz tekst, a następnie wygenerujemy audio z jego syntezą (TTS).</p>
-
 <div class="mb-3">
     <label for="textInput" class="form-label">Tekst do syntezy mowy:</label>
     <textarea id="textInput" class="form-control" @bind="_textForTTS" rows="3"></textarea>
