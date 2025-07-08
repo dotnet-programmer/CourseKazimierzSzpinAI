@@ -6,8 +6,13 @@ namespace IntelligentApp.Components.Pages;
 
 public partial class TextToSpeech
 {
+	private readonly List<string> _languages = [];
+	private readonly List<string> _voices = [];
+	private string _selectedLanguage = "pl-PL";
+	private string _selectedVoice = "pl-PL-MarekNeural";
+	private double _speed = 100;
 	private string _textForTTS = "Witaj na naszym kursie AI dla .NET!";
-	private string? _audioDataUrl = string.Empty;
+	private string? _audioDataUrl;
 
 	[Inject]
 	protected IAzureSpeechHttpRepository AzureSpeechHttpRepository { get; set; } = default!;
@@ -15,13 +20,40 @@ public partial class TextToSpeech
 	[Inject]
 	protected IFileReader FileReader { get; set; } = default!;
 
+	protected override async Task OnInitializedAsync()
+	{
+		var lines = await FileReader.ReadAllLinesAsync("voices.csv");
+
+		for (var i = 0; i < lines.Count; i++)
+		{
+			var splitLine = lines[i].Replace("\"", "").Split(',');
+
+			if(!_languages.Contains(splitLine[0]))
+			{
+				_languages.Add(splitLine[0]);
+			}
+
+			_voices.Add(splitLine[1]);
+		}
+
+		if (_languages.Count == 0)
+		{
+			_languages.Add("pl-PL");
+		}
+
+		if (_voices.Count == 0)
+		{
+			_voices.Add("pl-PL-MarekNeural");
+		}
+	}
+
 	private async Task SynthesizeSpeechAsync()
 	{
 		_audioDataUrl = null;
 
 		try
 		{
-			var audioData = await AzureSpeechHttpRepository.GetVoiceAsync(_textForTTS);
+			var audioData = await AzureSpeechHttpRepository.GetVoiceAsync(_textForTTS, _selectedLanguage, _selectedVoice, _speed);
 
 			if (audioData == null)
 			{
@@ -35,7 +67,7 @@ public partial class TextToSpeech
 				_audioDataUrl = $"data:audio/wav;base64,{base64}";
 			}
 		}
-		catch (Exception ex)
+		catch (Exception)
 		{
 			//logowanie
 			throw;

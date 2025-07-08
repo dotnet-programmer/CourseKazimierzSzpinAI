@@ -11,6 +11,32 @@
     <textarea id="textInput" class="form-control" @bind="_textForTTS" rows="3"></textarea>
 </div>
 
+<div class="mb-3">
+    <label class="mb-2">Wybierz język:</label>
+    <InputSelect @bind-Value="_selectedLanguage">
+        @foreach (var item in _languages)
+        {
+            <option value="@item">@item</option>
+        }
+    </InputSelect>
+</div>
+
+<div class="mb-3">
+    <label class="mb-2">Wybierz głos:</label>
+    <InputSelect @bind-Value="_selectedVoice">
+        @foreach (var item in _voices)
+        {
+            <option value="@item">@item</option>
+        }
+    </InputSelect>
+</div>
+
+<div class="mb-3">
+    <label class="mb-2">Wybierz prędkość mówienia:</label>
+    <input type="range" min="50" max="200" @bind="_speed" />
+    <span>@_speed%</span>
+</div>
+
 <button class="btn btn-primary" @onclick="SynthesizeSpeechAsync">Syntezuj</button>
 
 @if (!string.IsNullOrWhiteSpace(_audioDataUrl))

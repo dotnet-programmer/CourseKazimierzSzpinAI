@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Globalization;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using IntelligentApp.HttpRepository.Interfaces;
@@ -9,7 +10,7 @@ namespace IntelligentApp.HttpRepository;
 public class AzureSpeechHttpRepository(HttpClient ttsClient, HttpClient sttClient) : IAzureSpeechHttpRepository
 {
 	// zwraca wygenerowane audio w formacie tablicy bajtów na podstawie przesłanego tekstu
-	public async Task<byte[]?> GetVoiceAsync(string text)
+	public async Task<byte[]?> GetVoiceAsync(string text, string language = "pl-PL", string voice = "pl-PL-MarekNeural", double speed = 100)
 	{
 		if (string.IsNullOrWhiteSpace(text))
 		{
@@ -18,9 +19,11 @@ public class AzureSpeechHttpRepository(HttpClient ttsClient, HttpClient sttClien
 
 		// treść musi być w formacie Speech Synthetize Markup Language
 		var ssml = $@"
-            <speak version='1.0' xml:lang='pl=PL'>   
-                <voice name='pl-PL-MarekNeural'>
-                    {text}
+            <speak version='1.0' xml:lang='{language}'>   
+                <voice name='{voice}'>
+					<prosody rate='{(speed / 100).ToString(CultureInfo.InvariantCulture)}'> 
+						{text}
+					</prosody>
                 </voice>
             </speak>
             ";
