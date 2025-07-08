@@ -20,7 +20,7 @@ public partial class AudioRecord
 			_isRecording = true;
 			await JS.InvokeVoidAsync("audioRecorder.startRecording");
 		}
-		catch (Exception ex)
+		catch (Exception)
 		{
 			//logowanie
 			throw;
@@ -40,7 +40,7 @@ public partial class AudioRecord
 				_audioDataUrl = $"data:audio/wav;base64,{base64}";
 			}
 		}
-		catch (Exception ex)
+		catch (Exception)
 		{
 			//logowanie
 			throw;

@@ -13,7 +13,7 @@ public partial class AdvancedTextGeneration
 	private bool _isLoading = false;
 
 	[Inject]
-	public IOpenAiHttpRepository OpenAiHttpRepository { get; set; }
+	protected IOpenAiHttpRepository OpenAiHttpRepository { get; set; } = default!;
 
 	private async Task GenerateTextAsync()
 	{

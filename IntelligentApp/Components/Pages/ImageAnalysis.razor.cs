@@ -26,7 +26,7 @@ public partial class ImageAnalysis
 	[Inject]
 	protected IAzureAiHttpRepository AzureAiHttpRepository { get; set; } = default!;
 
-	private async Task AnalyzeImageFromServer()
+	private async Task AnalyzeImageFromServerAsync()
 	{
 		// pobranie tablicy bajtów z pliku obrazu
 		var fileBytes = await FileReader.ReadImageAsBytesAsync("nazwa.png");

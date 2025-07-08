@@ -81,8 +81,11 @@ public partial class VoiceAssistant
 		}
 
 		var ttsAudioData = await AzureSpeechHttpRepository.GetVoiceAsync(_openAIResponse);
-		var base64 = Convert.ToBase64String(ttsAudioData);
-		_audioDataUrl = $"data:audio/wav;base64,{base64}";
+		if (ttsAudioData != null)
+		{
+			var base64 = Convert.ToBase64String(ttsAudioData);
+			_audioDataUrl = $"data:audio/wav;base64,{base64}";
+		}
 
 		_isLoading = false;
 	}

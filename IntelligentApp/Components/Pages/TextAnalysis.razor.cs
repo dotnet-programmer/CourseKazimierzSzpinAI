@@ -11,7 +11,7 @@ public partial class TextAnalysis
 	private List<string> _keyPhrases = [];
 
 	[Inject]
-	public IAzureAiHttpRepository AzureAiHttpRepository { get; set; }
+	protected IAzureAiHttpRepository AzureAiHttpRepository { get; set; } = default!;
 
 	private async Task AnalyzeTextAsync()
 	{

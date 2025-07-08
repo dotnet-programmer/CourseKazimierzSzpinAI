@@ -39,7 +39,7 @@ public class AzureAiHttpRepository(HttpClient httpClient) : IAzureAiHttpReposito
 	}
 
 	// na podstawie przesłanej tablicy bajtów zwróci informacje o obrazie
-	public async Task<ImageAnalysisResponse> GetImageInfoAsync(byte[] image)
+	public async Task<ImageAnalysisResponse?> GetImageInfoAsync(byte[] image)
 	{
 		// parametr features określa co ma zostać zrobione z obrazem
 		// caption - opis obrazu

@@ -13,10 +13,10 @@ public partial class OpinionsAnalysis
 	private bool _isAnalyzing = false;
 
 	[Inject]
-	public IFileReader FileReader { get; set; }
+	protected IFileReader FileReader { get; set; } = default!;
 
 	[Inject]
-	public IAzureAiHttpRepository AzureAiHttpRepository { get; set; }
+	protected IAzureAiHttpRepository AzureAiHttpRepository { get; set; } = default!;
 
 	private async Task LoadOpinionsAsync()
 	{
@@ -28,8 +28,6 @@ public partial class OpinionsAnalysis
 		{
 			_opinions.Add(new() { Review = lines[i] });
 		}
-		//lines.RemoveAt(0);
-		//lines.ForEach(x => _opinions.Add(new() { Review = x }));
 
 		_isLoading = false;
 	}
@@ -47,11 +45,6 @@ public partial class OpinionsAnalysis
 	{
 		_isAnalyzing = true;
 
-		//for (int i = 0; i < _opinions.Count; i++)
-		//{
-		//	await AnalyzeOpinionAsync(_opinions[i]);
-		//}
-
 		List<Task> tasks = [];
 		foreach (var opinion in _opinions)
 		{
@@ -64,7 +57,10 @@ public partial class OpinionsAnalysis
 
 	private async Task AnalyzeOpinionAsync(Opinion opinion)
 	{
-		opinion.Sentiment = await AzureAiHttpRepository.AnalyzeSentimentAsync(opinion.Review);
-		opinion.KeyPhrases = await AzureAiHttpRepository.ExtractKeyPhrasesAsync(opinion.Review);
+		if (opinion.Review != null)
+		{
+			opinion.Sentiment = await AzureAiHttpRepository.AnalyzeSentimentAsync(opinion.Review);
+			opinion.KeyPhrases = await AzureAiHttpRepository.ExtractKeyPhrasesAsync(opinion.Review);
+		}
 	}
 }

@@ -11,10 +11,10 @@ public partial class OpenAiVsAzureAi
 	private bool _isLoading = false;
 
 	[Inject]
-	public IOpenAiHttpRepository OpenAiHttpRepository { get; set; }
+	protected IOpenAiHttpRepository OpenAiHttpRepository { get; set; } = default!;
 
 	[Inject]
-	public IAzureAiHttpRepository AzureAiHttpRepository { get; set; }
+	protected IAzureAiHttpRepository AzureAiHttpRepository { get; set; } = default!;
 
 	private async Task ProcessTextAsync()
 	{

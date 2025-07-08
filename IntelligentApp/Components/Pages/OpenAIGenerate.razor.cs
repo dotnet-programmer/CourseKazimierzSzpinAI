@@ -12,10 +12,10 @@ public partial class OpenAIGenerate
 	private string _generatedText = string.Empty;
 
 	[Inject]
-	public IOpenAiHttpRepository OpenAiHttpRepository { get; set; }
+	protected IOpenAiHttpRepository OpenAiHttpRepository { get; set; } = default!;
 
 	[Inject]
-	public IFileReader FileReader { get; set; }
+	protected IFileReader FileReader { get; set; } = default!;
 
 	protected override async Task OnInitializedAsync()
 		=> _availablePrompts = await FileReader.ReadAllLinesAsync("prompts.csv", '"');

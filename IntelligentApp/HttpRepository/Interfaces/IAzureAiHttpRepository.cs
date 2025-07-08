@@ -6,5 +6,5 @@ public interface IAzureAiHttpRepository
 {
 	Task<string> AnalyzeSentimentAsync(string text);
 	Task<List<string>> ExtractKeyPhrasesAsync(string text);
-	Task<ImageAnalysisResponse> GetImageInfoAsync(byte[] image);
+	Task<ImageAnalysisResponse?> GetImageInfoAsync(byte[] image);
 }

@@ -1,20 +1,17 @@
 ﻿using IntelligentApp.Models;
 using IntelligentApp.Services.Interfaces;
-using Microsoft.AspNetCore.Components;
 
 namespace IntelligentApp.Components.Pages;
 
-public partial class MyMovies
+// można używać uproszczonych konstruktorów zamiast właściwości [Inject]
+public partial class MyMovies(IFileReader fileReader)
 {
 	private readonly List<Movie> _movies = [];
 	private readonly string _csvFile = "favourite_movies.csv";
 
-	[Inject]
-	public IFileReader FileReader { get; set; }
-
 	protected override async Task OnInitializedAsync()
 	{
-		var lines = await FileReader.ReadAllLinesAsync(_csvFile);
+		var lines = await fileReader.ReadAllLinesAsync(_csvFile);
 		foreach (var item in lines)
 		{
 			var values = item.Split(',');
