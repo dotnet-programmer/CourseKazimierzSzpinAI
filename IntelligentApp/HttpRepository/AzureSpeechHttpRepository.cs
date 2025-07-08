@@ -1,10 +1,14 @@
-﻿using System.Text;
+﻿using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 using IntelligentApp.HttpRepository.Interfaces;
+using IntelligentApp.Models.AzureSpeech;
 
 namespace IntelligentApp.HttpRepository;
 
 public class AzureSpeechHttpRepository(HttpClient ttsClient, HttpClient sttClient) : IAzureSpeechHttpRepository
 {
+	// zwraca wygenerowane audio w formacie tablicy bajtów na podstawie przesłanego tekstu
 	public async Task<byte[]?> GetVoiceAsync(string text)
 	{
 		if (string.IsNullOrWhiteSpace(text))
@@ -38,5 +42,33 @@ public class AzureSpeechHttpRepository(HttpClient ttsClient, HttpClient sttClien
 
 		// odebranie danych audio jako bajty
 		return await response.Content.ReadAsByteArrayAsync();
+	}
+
+	// zwraca tekst wygenerowany na podstawie przesłanego audio
+	public async Task<string?> GetTextAsync(byte[] audioData)
+	{
+		if (audioData == null || audioData.Length == 0)
+		{
+			return null;
+		}
+
+		// przygotowanie treści w jakims formacie, tutaj audio/wav ale może być dowolny (mp4, mp3 itp)
+		using var content = new ByteArrayContent(audioData);
+		content.Headers.ContentType = new MediaTypeHeaderValue("audio/wav");
+
+		// wywołanie żądania typu POST w API
+		// do adresu endpointa trzeba dokleić parametry, tutaj język i format (simple/detailed)
+		var response = await sttClient.PostAsync("?language=pl-PL&format=simple", content);
+
+		// sprawdzenie błędów
+		response.EnsureSuccessStatusCode();
+
+		// odczytanie odpowiedzi w formacie string
+		var reponseString = await response.Content.ReadAsStringAsync();
+
+		// deserializacja JSON na zwracany model - SttResponseSimple
+		var sttResponse = JsonSerializer.Deserialize<SttResponseSimple>(reponseString);
+
+		return sttResponse?.RecognitionStatus == "Success" ? sttResponse.DisplayText : null;
 	}
 }

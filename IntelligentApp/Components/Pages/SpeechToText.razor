@@ -1,0 +1,20 @@
+﻿@page "/speech-to-text"
+@using IntelligentApp.Services.Interfaces
+
+<h3>Speech-to-Text (STT)</h3>
+
+<p>Mamy plik audio z mową i chcemy otrzymać transkrypt.</p>
+
+<InputFile OnChange="OnAudioSelectedAsync" accept="audio/wav,audio/mpeg" />
+
+<button class="btn btn-primary" @onclick="RecognizeSpeechAsync" disabled="@(_isLoading || _selectedAudio == null)">Rozpoznaj</button>
+
+@if (_isLoading)
+{
+    <p>Rozpoznawanie mowy... proszę czekać.</p>
+}
+else if (_transcript != null)
+{
+    <h4>Transkrypt:</h4>
+    <p>@_transcript</p>
+}
