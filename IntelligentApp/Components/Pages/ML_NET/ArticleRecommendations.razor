@@ -1,0 +1,47 @@
+﻿@page "/article-recommendations"
+
+<PageTitle>Article Recommendations</PageTitle>
+
+<h3>Article Recommendations</h3>
+<p>Rekomendacje artykułów dla Użytkownika</p>
+
+<div class="mt-3">
+    <button class="btn btn-danger" @onclick="TrainModel">Trenuj model</button>
+</div>
+
+<div class="mt-3">
+    <label class="form-label" for="userIdInput">Wybierz UserId:</label>
+    <input class="form-control" type="number" id="userIdInput" @bind="_selectedUserId" min="1" />
+</div>
+
+<select class="form-select mt-3" @bind="_selectedCategory">
+    <option value="">-- Wybierz kategorię --</option>
+    @if (_availableCategories != null)
+    {
+        @foreach (var cat in _availableCategories)
+        {
+            <option value="@cat">@cat</option>
+        }
+    }
+</select>
+
+<button class="btn btn-primary mt-3" @onclick="GenerateRecommendations">Pokaż rekomendacje</button>
+
+@if (!string.IsNullOrWhiteSpace(_trainModelInfo))
+{
+    <div class="mt-3">Wynik: @_trainModelInfo</div>
+}
+
+@if (_recommendedArticle != null && _recommendedArticle.Any())
+{
+    <h4 class="mt-3">Rekomendowane artykuły (od najwyższej przewidywanej oceny):</h4>
+    <ul>
+        @foreach (var item in _recommendedArticle)
+        {
+            <li>
+                Artykuł: @item.ArticleId,
+                Przewidywana ocena: @item.PredictedScore.ToString("0.00")
+            </li>
+        }
+    </ul>
+}
