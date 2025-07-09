@@ -1,0 +1,16 @@
+﻿@page "/simple-text-classification"
+
+<PageTitle>Simple Text Classification</PageTitle>
+
+<h3>Simple Text Classification</h3>
+<p>Wpisz opinię i zobaczysz czy jest ona pozytywna czy negatywna.</p>
+<div class="mb-3">
+    <label for="opinionInput" class="form-label">Opinia:</label>
+    <input id="opinionInput" class="form-control" @bind="_opinion"></input>
+</div>
+<button class="btn btn-primary" @onclick="Start">Start</button>
+
+@if (!string.IsNullOrWhiteSpace(_result))
+{
+    <div class="mt-3">Wynik: @_result</div>
+}
