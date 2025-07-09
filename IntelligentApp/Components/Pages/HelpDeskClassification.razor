@@ -1,0 +1,24 @@
+﻿@page "/helpdesk-classification"
+
+<PageTitle>HelpDesk Classification</PageTitle>
+
+<h3>HelpDesk Classification</h3>
+<p>Wpisz tytuł oraz opis zgłoszenia i zobaczysz proponowaną kategorię.</p>
+
+<div class="mb-3">
+    <label for="titleInput" class="form-label">Tytuł:</label>
+    <input id="titleInput" class="form-control" @bind="_title"></input>
+</div>
+
+<div class="mb-3">
+    <label for="descInput" class="form-label">Opis:</label>
+    <input id="descInput" class="form-control" @bind="_description"></input>
+</div>
+
+<button class="btn btn-primary" @onclick="Start">Start</button>
+
+@if (!string.IsNullOrWhiteSpace(_result))
+{
+    <div class="mt-3">Wynik: @_result</div>
+    <div class="mt-3">@((MarkupString)_metrics)</div>
+}

@@ -94,10 +94,10 @@ public partial class SimpleRegression(IWebHostEnvironment webHostEnvironment)
 		if (!File.Exists(modelPath))
 		{
 			var dataView = mlContext.Data.LoadFromTextFile<ArticleData>(
-			path: csvPath,
-			hasHeader: true,
-			separatorChar: ',',
-			allowQuoting: true);
+				path: csvPath,
+				hasHeader: true,
+				separatorChar: ',',
+				allowQuoting: true);
 
 			var split = mlContext.Data.TrainTestSplit(dataView, testFraction: 0.2);
 

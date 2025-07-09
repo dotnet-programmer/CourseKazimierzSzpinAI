@@ -53,8 +53,7 @@ public partial class SimpleTextClassification(IWebHostEnvironment webHostEnviron
 			// 3. wywołanie algorytmu klasyfikacji wieloklasowej
 			.Append(mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy("LabelKey", "Features"))
 			// 4. odwrotne mapowanie z klucza na etykietę, czyli tutaj będzie wynik tej predykcji
-			.Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel", "PredictedLabel")
-		);
+			.Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel", "PredictedLabel"));
 
 		// trenowanie modelu - w tym miejscu ML.NET dopasowuje parametry do danych, by nauczyć się rozróżniać teksty pozytywne od negatywnych
 		// jako parametr przekazanie zbioru danych treningowych 
