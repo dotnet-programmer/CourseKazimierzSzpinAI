@@ -4,6 +4,7 @@ using Microsoft.ML.Trainers;
 
 namespace IntelligentApp.Components.Pages.ML_NET;
 
+// Rekomendacja produktów (collaborative)
 public partial class Recommendations(IWebHostEnvironment webHostEnvironment)
 {
 	private int _selectedUserId = 1;
