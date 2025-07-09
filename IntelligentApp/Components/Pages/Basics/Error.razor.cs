@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Components;
 
-namespace IntelligentApp.Components.Pages;
+namespace IntelligentApp.Components.Pages.Basics;
 
 public partial class Error
 {

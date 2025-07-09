@@ -8,5 +8,5 @@ public class CustomerClusterPrediction
 	public uint ClusterId;
 
 	[ColumnName("Score")]
-	public float[] Distances;
+	public float[]? Distances;
 }

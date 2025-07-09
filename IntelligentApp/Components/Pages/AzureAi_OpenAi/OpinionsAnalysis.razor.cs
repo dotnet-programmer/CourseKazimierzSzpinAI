@@ -3,7 +3,7 @@ using IntelligentApp.Models;
 using IntelligentApp.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 
-namespace IntelligentApp.Components.Pages;
+namespace IntelligentApp.Components.Pages.AzureAi_OpenAi;
 
 public partial class OpinionsAnalysis
 {

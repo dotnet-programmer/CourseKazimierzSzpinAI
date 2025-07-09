@@ -1,4 +1,4 @@
-﻿namespace IntelligentApp.Components.Pages;
+﻿namespace IntelligentApp.Components.Pages.Basics;
 
 public partial class HelloUser
 {

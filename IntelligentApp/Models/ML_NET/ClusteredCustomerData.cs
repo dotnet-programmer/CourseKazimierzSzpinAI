@@ -20,5 +20,5 @@ public class ClusteredCustomerData
 	public uint PredictedClusterId { get; set; }
 
 	[ColumnName("Score")]
-	public float[] Distances { get; set; }
+	public float[]? Distances { get; set; }
 }

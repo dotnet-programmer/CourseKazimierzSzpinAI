@@ -2,7 +2,7 @@
 using IntelligentApp.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 
-namespace IntelligentApp.Components.Pages;
+namespace IntelligentApp.Components.Pages.AzureSpeech;
 
 public partial class TextToSpeech
 {

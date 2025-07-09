@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace IntelligentApp.Components.Pages;
+namespace IntelligentApp.Components.Pages.AzureSpeech;
 
 public partial class AudioRecord
 {

@@ -1,7 +1,7 @@
 ﻿using IntelligentApp.Models.ML_NET;
 using Microsoft.ML;
 
-namespace IntelligentApp.Components.Pages;
+namespace IntelligentApp.Components.Pages.ML_NET;
 
 public partial class HelpDeskClassification(IWebHostEnvironment webHostEnvironment)
 {

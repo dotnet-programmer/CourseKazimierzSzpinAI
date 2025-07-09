@@ -2,7 +2,7 @@
 using Microsoft.ML;
 using Microsoft.ML.Trainers;
 
-namespace IntelligentApp.Components.Pages;
+namespace IntelligentApp.Components.Pages.ML_NET;
 
 public partial class CustomerClustering(IWebHostEnvironment webHostEnvironment)
 {
@@ -91,7 +91,7 @@ public partial class CustomerClustering(IWebHostEnvironment webHostEnvironment)
 
 		_result = $"Przewidywany klaster: {result.ClusterId}";
 
-		for (int i = 0; i < result.Distances.Length; i++)
+		for (int i = 0; i < result.Distances?.Length; i++)
 		{
 			_distance += $"<br />Klaster {i + 1}: {result.Distances[i]}";
 		}

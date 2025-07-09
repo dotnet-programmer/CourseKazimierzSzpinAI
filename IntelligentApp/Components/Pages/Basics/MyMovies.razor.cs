@@ -1,7 +1,7 @@
 ﻿using IntelligentApp.Models;
 using IntelligentApp.Services.Interfaces;
 
-namespace IntelligentApp.Components.Pages;
+namespace IntelligentApp.Components.Pages.Basics;
 
 // można używać uproszczonych konstruktorów zamiast właściwości [Inject]
 public partial class MyMovies(IFileReader fileReader)
