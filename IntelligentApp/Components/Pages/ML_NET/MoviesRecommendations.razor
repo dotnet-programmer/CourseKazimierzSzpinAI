@@ -1,0 +1,34 @@
+﻿@page "/movies-recommendations"
+
+<PageTitle>Movies Recommendations</PageTitle>
+
+<h3>MoviesRecommendations</h3>
+<p>Rekomendacje filmów dla Użytkownika</p>
+
+@* wyświetlenie listy ze wszystkimi filmami *@
+<div class="mt-3">
+    <select class="form-select" @bind="_selectedMovieId">
+        <option value="">-- wybierz film --</option>
+        @if (_allMovies != null && _allMovies.Any())
+        {
+            @foreach (var movie in _allMovies)
+            {
+                <option value="@movie.MovieId">@movie.Title</option>
+            }
+        }
+    </select>
+    @* użytkownik wybiera film z listy i może zobaczyć rekomendacje *@
+    <button class="btn btn-primary mt-3" @onclick="ShowRecommendations">Pokaż rekomendacje</button>
+</div>
+
+@* wyświetlenie najbardziej podobnych filmów *@
+@if (_similarMovies != null && _similarMovies.Any())
+{
+    <h4 class="mt-3">Podobne filmy do: @_selectedMovieTitle</h4>
+    <ol>
+        @foreach (var item in _similarMovies)
+        {
+            <li>@item.Movie?.Title (@item.Movie?.Genre) - Similarity: @item.Similarity.ToString("0.00")</li>
+        }
+    </ol>
+}
