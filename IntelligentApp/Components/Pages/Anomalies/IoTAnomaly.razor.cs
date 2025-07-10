@@ -1,9 +1,10 @@
 ﻿using IntelligentApp.Models.Anomalies;
+using IntelligentApp.Services.Interfaces;
 using Microsoft.ML;
 
 namespace IntelligentApp.Components.Pages.Anomalies;
 
-public partial class IoTAnomaly(IWebHostEnvironment webHostEnvironment)
+public partial class IoTAnomaly(IFileService fileService)
 {
 	// lista ze wszystkimi danymi z .csv
 	private List<IoTSensorReading> _sensors = [];
@@ -14,7 +15,7 @@ public partial class IoTAnomaly(IWebHostEnvironment webHostEnvironment)
 
 		// odczytanie danych z .csv i mapowanie wyniku na obiekty IoTSensorReadingInput
 		var dataView = mlContext.Data.LoadFromTextFile<IoTSensorReadingInput>(
-			path: Path.Combine(webHostEnvironment.WebRootPath, "data", "anomalies", "iot_data.csv"),
+			path: fileService.GetFilePath("data", "anomalies", "iot_data.csv"),
 			hasHeader: true,
 			separatorChar: ','
 		);

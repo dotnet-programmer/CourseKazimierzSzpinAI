@@ -1,12 +1,13 @@
 ﻿using IntelligentApp.Models.Recommendations;
+using IntelligentApp.Services.Interfaces;
 using Microsoft.ML;
 
 namespace IntelligentApp.Components.Pages.Recommendations;
 
 // Rekomendacje filmów (content-based)
-public partial class MoviesRecommendations(IWebHostEnvironment webHostEnvironment)
+public partial class MoviesRecommendations(IFileService fileService)
 {
-	private readonly string _csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "recommendations", "movies.csv");
+	private readonly string _csvPath = fileService.GetFilePath("data", "recommendations", "movies.csv");
 
 	private List<MovieData> _allMovies;
 	private List<SimilarMovie> _similarMovies;

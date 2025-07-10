@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace IntelligentApp.Services;
 
-public class FileReaderService(IWebHostEnvironment webHostEnv) : IFileReader
+public class FileService(IWebHostEnvironment webHostEnv) : IFileService
 {
+	private readonly string _webRootPath = webHostEnv.WebRootPath;
+
 	public async Task<List<string>> ReadAllLinesAsync(string catalog, string fileName, char trimChar = default)
 	{
-		var lines = await File.ReadAllLinesAsync(Path.Combine(webHostEnv.WebRootPath, "data", catalog, fileName));
+		var lines = await File.ReadAllLinesAsync(Path.Combine(_webRootPath, "data", catalog, fileName));
 		List<string> result = [];
 		for (int i = 1; i < lines.Length; i++)
 		{
@@ -27,7 +29,7 @@ public class FileReaderService(IWebHostEnvironment webHostEnv) : IFileReader
 	}
 
 	public async Task<byte[]> ReadImageAsBytesAsync(string fileName) 
-		=> await File.ReadAllBytesAsync(Path.Combine(webHostEnv.WebRootPath, "images", fileName));
+		=> await File.ReadAllBytesAsync(Path.Combine(_webRootPath, "images", fileName));
 
 	public async Task<byte[]> ReadInputAsBytesAsync(IBrowserFile file)
 	{
@@ -42,4 +44,7 @@ public class FileReaderService(IWebHostEnvironment webHostEnv) : IFileReader
 
 	public string GetBase64String(string contentType, byte[] fileContent)
 		=> $"data:{contentType};base64,{Convert.ToBase64String(fileContent)}";
+
+	public string GetFilePath(params string[] paths)
+		=> Path.Combine(_webRootPath, Path.Combine(paths));
 }

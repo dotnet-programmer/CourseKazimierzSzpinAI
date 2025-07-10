@@ -1,9 +1,10 @@
 ﻿using IntelligentApp.Models.ML_NET;
+using IntelligentApp.Services.Interfaces;
 using Microsoft.ML;
 
 namespace IntelligentApp.Components.Pages.ML_NET;
 
-public partial class HelpDeskClassification(IWebHostEnvironment webHostEnvironment)
+public partial class HelpDeskClassification(IFileService fileService)
 {
 	private string? _title;
 	private string? _description;
@@ -20,8 +21,8 @@ public partial class HelpDeskClassification(IWebHostEnvironment webHostEnvironme
 
 		_result = string.Empty;
 
-		var csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "ml_net", "helpdesk_tickets.csv");
-		var modelPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "ml_net", "helpdesk_tickets_model.zip");
+		var csvPath = fileService.GetFilePath("data", "ml_net", "helpdesk_tickets.csv");
+		var modelPath = fileService.GetFilePath("data", "ml_net", "helpdesk_tickets_model.zip");
 
 		MLContext mlContext = new();
 		ITransformer model;

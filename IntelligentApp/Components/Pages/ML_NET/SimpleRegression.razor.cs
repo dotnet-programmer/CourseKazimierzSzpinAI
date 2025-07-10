@@ -1,12 +1,13 @@
 ﻿using IntelligentApp.Models.ML_NET;
+using IntelligentApp.Services.Interfaces;
 using Microsoft.ML;
 
 namespace IntelligentApp.Components.Pages.ML_NET;
 
-public partial class SimpleRegression(IWebHostEnvironment webHostEnvironment)
+public partial class SimpleRegression(IFileService fileService)
 {
-	private readonly string _csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "ml_net", "article_views.csv");
-	private readonly string _modelPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "ml_net", "article_views_model.zip");
+	private readonly string _csvPath = fileService.GetFilePath("data", "ml_net", "article_views.csv");
+	private readonly string _modelPath = fileService.GetFilePath("data", "ml_net", "article_views_model.zip");
 
 	private int _titleLength = 600;
 	private int _keywordsCount = 4;

@@ -4,14 +4,14 @@ using IntelligentApp.Services.Interfaces;
 namespace IntelligentApp.Components.Pages.Basics;
 
 // można używać uproszczonych konstruktorów zamiast właściwości [Inject]
-public partial class MyMovies(IFileReader fileReader)
+public partial class MyMovies(IFileService fileService)
 {
 	private readonly List<Movie> _movies = [];
 	private readonly string _csvFile = "favourite_movies.csv";
 
 	protected override async Task OnInitializedAsync()
 	{
-		var lines = await fileReader.ReadAllLinesAsync("basics", _csvFile);
+		var lines = await fileService.ReadAllLinesAsync("basics", _csvFile);
 		foreach (var item in lines)
 		{
 			var values = item.Split(',');

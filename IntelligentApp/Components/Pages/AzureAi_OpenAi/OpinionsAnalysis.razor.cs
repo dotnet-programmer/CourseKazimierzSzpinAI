@@ -13,7 +13,7 @@ public partial class OpinionsAnalysis
 	private bool _isAnalyzing = false;
 
 	[Inject]
-	protected IFileReader FileReader { get; set; } = default!;
+	protected IFileService FileService { get; set; } = default!;
 
 	[Inject]
 	protected IAzureAiHttpRepository AzureAiHttpRepository { get; set; } = default!;
@@ -23,7 +23,7 @@ public partial class OpinionsAnalysis
 		_isLoading = true;
 
 		_opinions.Clear();
-		var lines = await FileReader.ReadAllLinesAsync("azureai", "opinions.csv", '"');
+		var lines = await FileService.ReadAllLinesAsync("azureai", "opinions.csv", '"');
 		for (int i = 1; i < lines.Count; i++)
 		{
 			_opinions.Add(new() { Review = lines[i] });

@@ -18,11 +18,11 @@ public partial class TextToSpeech
 	protected IAzureSpeechHttpRepository AzureSpeechHttpRepository { get; set; } = default!;
 
 	[Inject]
-	protected IFileReader FileReader { get; set; } = default!;
+	protected IFileService FileService { get; set; } = default!;
 
 	protected override async Task OnInitializedAsync()
 	{
-		var lines = await FileReader.ReadAllLinesAsync("azure-speech", "voices.csv");
+		var lines = await FileService.ReadAllLinesAsync("azure-speech", "voices.csv");
 
 		for (var i = 0; i < lines.Count; i++)
 		{
@@ -60,12 +60,7 @@ public partial class TextToSpeech
 				return;
 			}
 
-			var base64 = Convert.ToBase64String(audioData);
-
-			if (!string.IsNullOrWhiteSpace(base64))
-			{
-				_audioDataUrl = $"data:audio/wav;base64,{base64}";
-			}
+			_audioDataUrl = FileService.GetBase64String("audio/wav", audioData);
 		}
 		catch (Exception)
 		{

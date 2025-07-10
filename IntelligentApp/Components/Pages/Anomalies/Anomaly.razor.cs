@@ -1,9 +1,10 @@
 ﻿using IntelligentApp.Models.Anomalies;
+using IntelligentApp.Services.Interfaces;
 using Microsoft.ML;
 
 namespace IntelligentApp.Components.Pages.Anomalies;
 
-public partial class Anomaly(IWebHostEnvironment webHostEnvironment)
+public partial class Anomaly(IFileService fileService)
 {
 	private List<AnomalyPrediction>? _logs;
 
@@ -12,7 +13,7 @@ public partial class Anomaly(IWebHostEnvironment webHostEnvironment)
 		MLContext mlContext = new();
 
 		var dataView = mlContext.Data.LoadFromTextFile<AnomalyTimestampData>(
-			path: Path.Combine(webHostEnvironment.WebRootPath, "data", "anomalies", "simple_logs.csv"),
+			path: fileService.GetFilePath("data", "anomalies", "simple_logs.csv"),
 			hasHeader: true,
 			separatorChar: ',',
 			allowQuoting: true

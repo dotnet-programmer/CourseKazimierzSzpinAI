@@ -15,13 +15,13 @@ public partial class SpeechToText
 	protected IAzureSpeechHttpRepository AzureSpeechHttpRepository { get; set; } = default!;
 
 	[Inject]
-	protected IFileReader FileReader { get; set; } = default!;
+	protected IFileService FileService { get; set; } = default!;
 
 	private async Task OnAudioSelectedAsync(InputFileChangeEventArgs e)
 	{
 		try
 		{
-			_selectedAudio = await FileReader.ReadInputAsBytesAsync(e.File);
+			_selectedAudio = await FileService.ReadInputAsBytesAsync(e.File);
 		}
 		catch (Exception ex)
 		{

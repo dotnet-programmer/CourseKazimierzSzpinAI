@@ -1,10 +1,11 @@
 ﻿using IntelligentApp.Models.Anomalies;
+using IntelligentApp.Services.Interfaces;
 using Microsoft.ML;
 using Microsoft.ML.Trainers;
 
 namespace IntelligentApp.Components.Pages.Anomalies;
 
-public partial class FraudDetection(IWebHostEnvironment webHostEnvironment)
+public partial class FraudDetection(IFileService fileService)
 {
 	// próg, powyżej którego transakcja będzie uznawana za anomalię
 	private const float Threshold = 9000000.0f;
@@ -15,7 +16,7 @@ public partial class FraudDetection(IWebHostEnvironment webHostEnvironment)
 		MLContext mlContext = new();
 
 		var dataView = mlContext.Data.LoadFromTextFile<TransactionsInput>(
-			path: Path.Combine(webHostEnvironment.WebRootPath, "data", "anomalies", "fraud_transactions.csv"),
+			path: fileService.GetFilePath("data", "anomalies", "fraud_transactions.csv"),
 			hasHeader: true,
 			separatorChar: ',');
 

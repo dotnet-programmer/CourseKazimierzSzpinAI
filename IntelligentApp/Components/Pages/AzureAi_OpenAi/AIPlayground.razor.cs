@@ -14,7 +14,7 @@ public partial class AIPlayground
 	private string _sentimentResult = string.Empty;
 
 	[Inject]
-	protected IFileReader FileReader { get; set; } = default!;
+	protected IFileService FileService { get; set; } = default!;
 
 	[Inject]
 	protected IOpenAiHttpRepository OpenAiHttpRepository { get; set; } = default!;
@@ -23,7 +23,7 @@ public partial class AIPlayground
 	protected IAzureAiHttpRepository AzureAiHttpRepository { get; set; } = default!;
 
 	protected override async Task OnInitializedAsync()
-		=> _availablePrompts = await FileReader.ReadAllLinesAsync("openai", "prompts.csv", '"');
+		=> _availablePrompts = await FileService.ReadAllLinesAsync("openai", "prompts.csv", '"');
 
 	private void OnPromptSelected(ChangeEventArgs e)
 	{

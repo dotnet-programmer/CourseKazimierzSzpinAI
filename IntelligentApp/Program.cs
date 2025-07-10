@@ -74,7 +74,7 @@ builder.Services.AddScoped<IAzureVisionHttpRepository, AzureVisionHttpRepository
 	return new AzureVisionHttpRepository(httpClient);
 });
 
-builder.Services.AddScoped<IFileReader, FileReaderService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

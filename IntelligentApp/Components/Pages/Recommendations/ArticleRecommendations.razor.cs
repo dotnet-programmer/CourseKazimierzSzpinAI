@@ -1,4 +1,5 @@
 ﻿using IntelligentApp.Models.Recommendations;
+using IntelligentApp.Services.Interfaces;
 using Microsoft.ML;
 using Microsoft.ML.Trainers;
 
@@ -7,10 +8,10 @@ namespace IntelligentApp.Components.Pages.Recommendations;
 // Rekomendacja artykułów (collaborative + podział na kategorie (propozycje tylko z 1 wybranej kategorii))
 // na podstawie Id użytkownika oraz wybranej kategorii zwróci najbardziej rekomendowane artykuły
 // plik article_ratings.csv zawiera Id użytkownika, Id artykułu, ocenę (opisaną jako Label) i jeszcze kategoria, ale bez opisu w 1 wierszu
-public partial class ArticleRecommendations(IWebHostEnvironment webHostEnvironment)
+public partial class ArticleRecommendations(IFileService fileService)
 {
-	private readonly string _csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "recommendations", "article_ratings.csv");
-	private readonly string _modelPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "recommendations", "article_ratings_model.zip");
+	private readonly string _csvPath = fileService.GetFilePath("data", "recommendations", "article_ratings.csv");
+	private readonly string _modelPath = fileService.GetFilePath("data", "recommendations", "article_ratings_model.zip");
 
 	private List<ArticleRecommendationResult> _recommendedArticle = [];
 	private List<string?> _availableCategories = [];

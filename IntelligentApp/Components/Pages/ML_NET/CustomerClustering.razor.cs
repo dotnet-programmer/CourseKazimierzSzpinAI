@@ -1,10 +1,11 @@
 ﻿using IntelligentApp.Models.ML_NET;
+using IntelligentApp.Services.Interfaces;
 using Microsoft.ML;
 using Microsoft.ML.Trainers;
 
 namespace IntelligentApp.Components.Pages.ML_NET;
 
-public partial class CustomerClustering(IWebHostEnvironment webHostEnvironment)
+public partial class CustomerClustering(IFileService fileService)
 {
 	private string _result = "";
 	private string _metrics = "";
@@ -19,7 +20,7 @@ public partial class CustomerClustering(IWebHostEnvironment webHostEnvironment)
 	{
 		_result = _metrics = _distance = _customersInfo = string.Empty;
 
-		var csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "ml_net", "customer_data.csv");
+		var csvPath = fileService.GetFilePath("data", "ml_net", "customer_data.csv");
 
 		MLContext mlContext = new();
 

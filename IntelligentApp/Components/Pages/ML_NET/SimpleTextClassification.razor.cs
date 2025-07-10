@@ -1,9 +1,10 @@
 ﻿using IntelligentApp.Models.ML_NET;
+using IntelligentApp.Services.Interfaces;
 using Microsoft.ML;
 
 namespace IntelligentApp.Components.Pages.ML_NET;
 
-public partial class SimpleTextClassification(IWebHostEnvironment webHostEnvironment)
+public partial class SimpleTextClassification(IFileService fileService)
 {
 	private string _opinion = "Uwielbiam ten kurs!";
 	private string? _result;
@@ -18,7 +19,7 @@ public partial class SimpleTextClassification(IWebHostEnvironment webHostEnviron
 		_result = null;
 
 		// wskazanie ścieżki do pliku z danymi używanymi do trenowania modelu
-		var csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "ml_net", "simple_text_classification.csv");
+		var csvPath = fileService.GetFilePath("data", "ml_net", "simple_text_classification.csv");
 
 		// główny punkt wejscia do ML.NET
 		// jako parametr można przekazać seed - stałe ziarno losowości, potrzebne do większej powtarzalności

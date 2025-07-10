@@ -1,14 +1,15 @@
 ﻿using IntelligentApp.Models.Recommendations;
+using IntelligentApp.Services.Interfaces;
 using Microsoft.ML;
 using Microsoft.ML.Trainers;
 
 namespace IntelligentApp.Components.Pages.Recommendations;
 
 // Rekomendacja produktów (collaborative)
-public partial class Recommendations(IWebHostEnvironment webHostEnvironment)
+public partial class Recommendations(IFileService fileService)
 {
-	private readonly string _csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "recommendations", "product_ratings.csv");
-	private readonly string _modelPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "recommendations", "product_ratings_model.zip");
+	private readonly string _csvPath = fileService.GetFilePath("data", "recommendations", "product_ratings.csv");
+	private readonly string _modelPath = fileService.GetFilePath("data", "recommendations", "product_ratings_model.zip");
 	
 	private List<ProductRecommendationResult>? _recommendedProducts;
 	private int _selectedUserId = 1;

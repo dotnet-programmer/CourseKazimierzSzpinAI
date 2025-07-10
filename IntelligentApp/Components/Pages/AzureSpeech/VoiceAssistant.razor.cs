@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using IntelligentApp.HttpRepository.Interfaces;
+using IntelligentApp.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -24,7 +25,7 @@ public partial class VoiceAssistant
 	protected IOpenAiHttpRepository OpenAiHttpRepository { get; set; } = default!;
 
 	[Inject]
-	protected IWebHostEnvironment Env { get; set; } = default!;
+	protected IFileService FileService { get; set; } = default!;
 
 	private async Task StartRecordingAsync()
 	{
@@ -83,8 +84,7 @@ public partial class VoiceAssistant
 		var ttsAudioData = await AzureSpeechHttpRepository.GetVoiceAsync(_openAIResponse);
 		if (ttsAudioData != null)
 		{
-			var base64 = Convert.ToBase64String(ttsAudioData);
-			_audioDataUrl = $"data:audio/wav;base64,{base64}";
+			_audioDataUrl = FileService.GetBase64String("audio/wav", ttsAudioData);
 		}
 
 		_isLoading = false;
@@ -93,16 +93,14 @@ public partial class VoiceAssistant
 	// żeby metoda działałą, potrzebny plik wwwroot/ffmpeg/ffmpeg.exe
 	private async Task<byte[]> ConvertWebmToWavAsync(byte[] webmBytes)
 	{
-		var webRootPath = Env.WebRootPath;
-
 		// tymczasowe zapisanie pliku na dysku w formacie .webm w wwwroot
-		var tempWebmPath = Path.Combine(webRootPath, $"{Guid.NewGuid()}.webm");
+		var tempWebmPath = FileService.GetFilePath($"{Guid.NewGuid()}.webm");
 
 		// tymczasowa ścieżka docelowa, czyli gdzie będzie przekonwertowany plik .wav
-		var tempWavPath = Path.Combine(webRootPath, $"{Guid.NewGuid()}.wav");
+		var tempWavPath = FileService.GetFilePath($"{Guid.NewGuid()}.wav");
 
 		// ścieżka do pliku ffmpeg.exe
-		var ffmpegPath = Path.Combine(webRootPath, "ffmpeg", $"ffmpeg.exe");
+		var ffmpegPath = FileService.GetFilePath("ffmpeg", $"ffmpeg.exe");
 
 		try
 		{

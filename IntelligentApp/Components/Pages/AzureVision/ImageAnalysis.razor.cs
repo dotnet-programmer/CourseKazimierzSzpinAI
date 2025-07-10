@@ -22,7 +22,7 @@ public partial class ImageAnalysis
 	private string _imageDataUrl = string.Empty;
 
 	[Inject]
-	protected IFileReader FileReader { get; set; } = default!;
+	protected IFileService FileService { get; set; } = default!;
 
 	[Inject]
 	protected IAzureVisionHttpRepository AzureVisionHttpRepository { get; set; } = default!;
@@ -30,7 +30,7 @@ public partial class ImageAnalysis
 	private async Task AnalyzeImageFromServerAsync()
 	{
 		// pobranie tablicy bajtów z pliku obrazu
-		var fileBytes = await FileReader.ReadImageAsBytesAsync("nazwa.png");
+		var fileBytes = await FileService.ReadImageAsBytesAsync("nazwa.png");
 		await AnalyzeImageAsync(fileBytes);
 	}
 
@@ -95,10 +95,10 @@ public partial class ImageAnalysis
 			var file = e.File;
 
 			// do zapisania przekazanego pliku jako tablicy bajtów, żeby wykorzystać go w metodzie analizującej
-			_selectedFileContent = await FileReader.ReadInputAsBytesAsync(file);
+			_selectedFileContent = await FileService.ReadInputAsBytesAsync(file);
 
 			// zbudowanie adresu URL do pliku
-			_imageDataUrl = FileReader.GetBase64String(file.ContentType, _selectedFileContent);
+			_imageDataUrl = FileService.GetBase64String(file.ContentType, _selectedFileContent);
 		}
 		catch (Exception ex)
 		{

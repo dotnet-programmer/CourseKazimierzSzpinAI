@@ -15,10 +15,10 @@ public partial class OpenAIGenerate
 	protected IOpenAiHttpRepository OpenAiHttpRepository { get; set; } = default!;
 
 	[Inject]
-	protected IFileReader FileReader { get; set; } = default!;
+	protected IFileService FileService { get; set; } = default!;
 
 	protected override async Task OnInitializedAsync()
-		=> _availablePrompts = await FileReader.ReadAllLinesAsync("openai", "prompts.csv", '"');
+		=> _availablePrompts = await FileService.ReadAllLinesAsync("openai", "prompts.csv", '"');
 
 	private void OnPromptSelected(ChangeEventArgs e)
 	{
