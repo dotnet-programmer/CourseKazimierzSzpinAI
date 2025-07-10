@@ -1,0 +1,58 @@
+﻿@page "/iot-anomaly"
+
+<PageTitle>IoT Anomaly Detection</PageTitle>
+
+<h3>IoT Anomaly Detection</h3>
+<p>Wykrywanie anomalii w danych pochodzących z czujników IoT.</p>
+<button class="btn btn-primary" @onclick="DetectAnomalies">Wykryj anomalię</button>
+
+@if (_sensors != null && _sensors.Any())
+{
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Temp</th> 
+                <th>Hum</th> 
+                <th>Press</th> 
+                <th>Vibr</th> 
+                <th>IsAnomaly</th>
+                <th>Score</th>
+                <th>IsAnomaly (score)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var sensor in _sensors)
+            {
+                <tr>
+                    <td>@sensor.Timestamp</td>
+                    <td>@sensor.Temperature</td>
+                    <td>@sensor.Humidity</td>
+                    <td>@sensor.Pressure</td>
+                    <td>@sensor.Vibration</td>
+                    <td>
+                        @if (sensor.Prediction.PredictedLabel)
+                        {
+                            <span class="text-danger"><strong>TAK</strong></span>
+                        }
+                        else
+                        {
+                            <span>Nie</span>
+                        }
+                    </td>
+                    <td>@sensor.Prediction.Score</td>
+                    <td>
+                        @if (sensor.Prediction.Score > 0.1)
+                        {
+                            <span class="text-danger"><strong>TAK</strong></span>
+                        }
+                        else
+                        {
+                            <span>Nie</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

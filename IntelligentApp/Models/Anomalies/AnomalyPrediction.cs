@@ -3,7 +3,7 @@
 namespace IntelligentApp.Models.Anomalies;
 
 // zrobione dziedziczenie po TimestampData, bo wyniki też zawierają te kolumny, więc dziedziczenie żeby nie powtarzać kodu
-public class AnomalyPrediction : TimestampData
+public class AnomalyPrediction : AnomalyTimestampData
 {
 	// informacje o predykcji, zawsze będą zwrócone 3 elementy z wyników detekcji anomalii
 	[VectorType(3)]

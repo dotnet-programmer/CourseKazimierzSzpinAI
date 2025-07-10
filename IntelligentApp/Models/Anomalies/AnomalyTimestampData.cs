@@ -2,7 +2,7 @@
 
 namespace IntelligentApp.Models.Anomalies;
 
-public class TimestampData
+public class AnomalyTimestampData
 {
 	// data i czas logu
 	[LoadColumn(0)]

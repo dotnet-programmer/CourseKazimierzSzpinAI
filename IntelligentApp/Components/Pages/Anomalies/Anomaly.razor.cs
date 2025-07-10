@@ -11,7 +11,7 @@ public partial class Anomaly(IWebHostEnvironment webHostEnvironment)
 	{
 		MLContext mlContext = new();
 
-		var dataView = mlContext.Data.LoadFromTextFile<TimestampData>(
+		var dataView = mlContext.Data.LoadFromTextFile<AnomalyTimestampData>(
 			path: Path.Combine(webHostEnvironment.WebRootPath, "data", "anomalies", "simple_logs.csv"),
 			hasHeader: true,
 			separatorChar: ',',
