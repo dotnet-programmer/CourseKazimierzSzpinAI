@@ -1,0 +1,57 @@
+﻿@page "/culinary-assistant"
+
+<PageTitle>Culinary Assistant</PageTitle>
+
+<h3>Asystent Kulinarno-Dietetyczny</h3>
+<p class="mt-3">Wybierz zdjęcie, a następnie kliknij "Rozpoznaj składniki", aby otrzymać listę Twoich składników do stworzenia dania. Następnie możesz zmodyfikować rozpoznane składniki.</p>
+<div class="mb-3">
+    <InputFile OnChange="OnFileSelectedAsync" accept="image/*" />
+</div>
+@if (_imageDataUrl != null)
+{
+    <h4>Wgrany Obraz:</h4>
+    <img src="@_imageDataUrl" alt="Wgrany obraz" style="display: block;max-width:300px;max-height:300px;" />
+    <button class="btn btn-primary mt-3" disabled="@_isLoading" @onclick="IdentifyIngredientsAsync">Rozpoznaj składniki</button>
+}
+@if (_isLoading)
+{
+    <p class="mt-3">Analizowanie danych, proszę czekać...</p>
+}
+<div class="mb-3 mt-5">
+    @if (_ingredients != null && _ingredients.Any())
+    {
+        <label class="form-label">Twoje składniki:</label>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Składnik</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ingredient in _ingredients)
+                {
+                    <tr>
+                        <td>@ingredient</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" @onclick="() => RemoveIngredient(ingredient)">Usuń</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (!_isLoading)
+    {
+        <p><i>Brak wybranych składników.</i></p>
+    }
+    @* możliwość wprowadzenia nowych składników *@
+    <div class="mt-5 mb-5">
+        <label for="opinionInput" class="form-label">Nowy składnik:</label>
+        <input id="opinionInput" class="form-control" @bind="_ingredient"></input>
+        <button class="btn btn-secondary mt-3" @onclick="AddIngredient">Dodaj</button>
+    </div>
+</div>
+
+<hr />
+
