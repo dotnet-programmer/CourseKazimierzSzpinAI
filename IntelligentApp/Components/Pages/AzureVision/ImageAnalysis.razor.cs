@@ -98,8 +98,7 @@ public partial class ImageAnalysis
 			_selectedFileContent = await FileReader.ReadInputAsBytesAsync(file);
 
 			// zbudowanie adresu URL do pliku
-			var base64 = Convert.ToBase64String(_selectedFileContent);
-			_imageDataUrl = $"data:{file.ContentType};base64,{base64}";
+			_imageDataUrl = FileReader.GetBase64String(file.ContentType, _selectedFileContent);
 		}
 		catch (Exception ex)
 		{

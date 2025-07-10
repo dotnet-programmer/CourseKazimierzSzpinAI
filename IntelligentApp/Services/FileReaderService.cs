@@ -39,4 +39,7 @@ public class FileReaderService(IWebHostEnvironment webHostEnv) : IFileReader
 		// zwrócenie tablicy bajtów ze strumienia
 		return ms.ToArray();
 	}
+
+	public string GetBase64String(string contentType, byte[] fileContent)
+		=> $"data:{contentType};base64,{Convert.ToBase64String(fileContent)}";
 }
