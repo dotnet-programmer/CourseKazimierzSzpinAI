@@ -1,4 +1,4 @@
-﻿namespace IntelligentApp.Models;
+﻿namespace IntelligentApp.Models.Basics;
 
 public class Movie
 {

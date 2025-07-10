@@ -18,7 +18,7 @@ public partial class OpenAIGenerate
 	protected IFileReader FileReader { get; set; } = default!;
 
 	protected override async Task OnInitializedAsync()
-		=> _availablePrompts = await FileReader.ReadAllLinesAsync("prompts.csv", '"');
+		=> _availablePrompts = await FileReader.ReadAllLinesAsync("openai", "prompts.csv", '"');
 
 	private void OnPromptSelected(ChangeEventArgs e)
 	{

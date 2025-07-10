@@ -1,5 +1,5 @@
 ﻿using IntelligentApp.HttpRepository.Interfaces;
-using IntelligentApp.Models;
+using IntelligentApp.Models.AzureAi;
 using IntelligentApp.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 
@@ -23,7 +23,7 @@ public partial class OpinionsAnalysis
 		_isLoading = true;
 
 		_opinions.Clear();
-		var lines = await FileReader.ReadAllLinesAsync("opinions.csv", '"');
+		var lines = await FileReader.ReadAllLinesAsync("azureai", "opinions.csv", '"');
 		for (int i = 1; i < lines.Count; i++)
 		{
 			_opinions.Add(new() { Review = lines[i] });

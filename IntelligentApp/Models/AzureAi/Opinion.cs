@@ -1,4 +1,4 @@
-﻿namespace IntelligentApp.Models;
+﻿namespace IntelligentApp.Models.AzureAi;
 
 public class Opinion
 {

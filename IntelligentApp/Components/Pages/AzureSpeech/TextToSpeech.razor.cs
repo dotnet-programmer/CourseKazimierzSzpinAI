@@ -22,7 +22,7 @@ public partial class TextToSpeech
 
 	protected override async Task OnInitializedAsync()
 	{
-		var lines = await FileReader.ReadAllLinesAsync("voices.csv");
+		var lines = await FileReader.ReadAllLinesAsync("azure-speech", "voices.csv");
 
 		for (var i = 0; i < lines.Count; i++)
 		{

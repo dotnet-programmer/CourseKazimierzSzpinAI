@@ -1,4 +1,4 @@
-﻿using IntelligentApp.Models;
+﻿using IntelligentApp.Models.Basics;
 using IntelligentApp.Services.Interfaces;
 
 namespace IntelligentApp.Components.Pages.Basics;
@@ -11,7 +11,7 @@ public partial class MyMovies(IFileReader fileReader)
 
 	protected override async Task OnInitializedAsync()
 	{
-		var lines = await fileReader.ReadAllLinesAsync(_csvFile);
+		var lines = await fileReader.ReadAllLinesAsync("basics", _csvFile);
 		foreach (var item in lines)
 		{
 			var values = item.Split(',');
