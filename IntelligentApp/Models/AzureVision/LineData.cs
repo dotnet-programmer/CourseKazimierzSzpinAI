@@ -1,4 +1,4 @@
-﻿namespace IntelligentApp.Models.AzureAi;
+﻿namespace IntelligentApp.Models.AzureVision;
 
 // Dzięki tym punktom można wyznaczyć obszar, gdzie znajduje się cały tekst danej linii.
 // Będą to współrzędne prostokąta, który całkowicie otacza daną linię tekstu. 

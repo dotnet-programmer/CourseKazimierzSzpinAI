@@ -1,4 +1,4 @@
-﻿using IntelligentApp.Models.AzureAi;
+﻿using IntelligentApp.Models.AzureVision;
 
 namespace IntelligentApp.HttpRepository.Interfaces;
 

@@ -1,5 +1,5 @@
 ﻿using IntelligentApp.HttpRepository.Interfaces;
-using IntelligentApp.Models.AzureAi;
+using IntelligentApp.Models.AzureVision;
 using IntelligentApp.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;

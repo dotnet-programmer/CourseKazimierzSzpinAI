@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using IntelligentApp.HttpRepository.Interfaces;
 using IntelligentApp.Models.AzureAi;
+using IntelligentApp.Models.AzureVision;
 
 namespace IntelligentApp.HttpRepository;
 

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace IntelligentApp.Models.AzureAi;
+namespace IntelligentApp.Models.AzureVision;
 
 public class ReadWord
 {
