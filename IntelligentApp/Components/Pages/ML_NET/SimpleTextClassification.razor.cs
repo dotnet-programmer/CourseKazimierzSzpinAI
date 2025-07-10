@@ -18,7 +18,7 @@ public partial class SimpleTextClassification(IWebHostEnvironment webHostEnviron
 		_result = null;
 
 		// wskazanie ścieżki do pliku z danymi używanymi do trenowania modelu
-		var csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "simple_text_classification.csv");
+		var csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "ml_net", "simple_text_classification.csv");
 
 		// główny punkt wejscia do ML.NET
 		// jako parametr można przekazać seed - stałe ziarno losowości, potrzebne do większej powtarzalności

@@ -5,6 +5,9 @@ namespace IntelligentApp.Components.Pages.ML_NET;
 
 public partial class SimpleRegression(IWebHostEnvironment webHostEnvironment)
 {
+	private readonly string _csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "ml_net", "article_views.csv");
+	private readonly string _modelPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "ml_net", "article_views_model.zip");
+
 	private int _titleLength = 600;
 	private int _keywordsCount = 4;
 	private string _category = "Technology";
@@ -19,13 +22,10 @@ public partial class SimpleRegression(IWebHostEnvironment webHostEnvironment)
 	{
 		_result = _metrics = string.Empty;
 
-		var webRootPath = webHostEnvironment.WebRootPath;
-		var csvPath = Path.Combine(webRootPath, "data", "article_views.csv");
-
 		MLContext mlContext = new();
 
 		var dataView = mlContext.Data.LoadFromTextFile<ArticleData>(
-			path: csvPath,
+			path: _csvPath,
 			hasHeader: true,
 			separatorChar: ',',
 			allowQuoting: true);
@@ -81,20 +81,15 @@ public partial class SimpleRegression(IWebHostEnvironment webHostEnvironment)
 	{
 		_result = _metrics = string.Empty;
 
-		var webRootPath = webHostEnvironment.WebRootPath;
-		var csvPath = Path.Combine(webRootPath, "data", "article_views.csv");
-		// ścieżka do pliku z wytrenowanym modelem
-		var modelPath = Path.Combine(webRootPath, "data", "article_views_model.zip");
-
 		MLContext mlContext = new();
 
 		ITransformer model;
 
 		//A) Model nie istnieje - trenujemy i zapisujemy
-		if (!File.Exists(modelPath))
+		if (!File.Exists(_modelPath))
 		{
 			var dataView = mlContext.Data.LoadFromTextFile<ArticleData>(
-				path: csvPath,
+				path: _csvPath,
 				hasHeader: true,
 				separatorChar: ',',
 				allowQuoting: true);
@@ -117,12 +112,12 @@ public partial class SimpleRegression(IWebHostEnvironment webHostEnvironment)
 			_metrics += $"---R^2:  {metrics.RSquared}";
 
 			// zapisanie wytrenowanego modelu do pliku
-			mlContext.Model.Save(model, split.TrainSet.Schema, modelPath);
+			mlContext.Model.Save(model, split.TrainSet.Schema, _modelPath);
 		}
 		//B) Model istnieje - trzeba go załadować
 		else
 		{
-			using var stream = File.OpenRead(modelPath);
+			using var stream = File.OpenRead(_modelPath);
 			model = mlContext.Model.Load(stream, out var inputSchema);
 		}
 

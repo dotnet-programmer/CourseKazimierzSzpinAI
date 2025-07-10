@@ -19,7 +19,7 @@ public partial class CustomerClustering(IWebHostEnvironment webHostEnvironment)
 	{
 		_result = _metrics = _distance = _customersInfo = string.Empty;
 
-		var csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "customer_data.csv");
+		var csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "ml_net", "customer_data.csv");
 
 		MLContext mlContext = new();
 

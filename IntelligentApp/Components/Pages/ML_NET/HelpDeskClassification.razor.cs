@@ -20,9 +20,8 @@ public partial class HelpDeskClassification(IWebHostEnvironment webHostEnvironme
 
 		_result = string.Empty;
 
-		var webRootPath = webHostEnvironment.WebRootPath;
-		var csvPath = Path.Combine(webRootPath, "data", "helpdesk_tickets.csv");
-		var modelPath = Path.Combine(webRootPath, "data", "helpdesk_tickets_model.zip");
+		var csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "ml_net", "helpdesk_tickets.csv");
+		var modelPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "ml_net", "helpdesk_tickets_model.zip");
 
 		MLContext mlContext = new();
 		ITransformer model;
