@@ -1,4 +1,4 @@
-﻿namespace IntelligentApp.Models.ML_NET;
+﻿namespace IntelligentApp.Models.Recommendations;
 
 // klasa pomocnicza która przyporządkuje każdy artykuł z predykcją
 public class ArticleRecommendationResult

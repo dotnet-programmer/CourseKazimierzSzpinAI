@@ -1,4 +1,4 @@
-﻿namespace IntelligentApp.Models.ML_NET;
+﻿namespace IntelligentApp.Models.Recommendations;
 
 // przypisanie wektora cech do konkretnego filmu
 public class MovieVector

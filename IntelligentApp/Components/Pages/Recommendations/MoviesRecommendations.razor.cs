@@ -1,18 +1,20 @@
-﻿using IntelligentApp.Models.ML_NET;
+﻿using IntelligentApp.Models.Recommendations;
 using Microsoft.ML;
 
-namespace IntelligentApp.Components.Pages.ML_NET;
+namespace IntelligentApp.Components.Pages.Recommendations;
 
 // Rekomendacje filmów (content-based)
 public partial class MoviesRecommendations(IWebHostEnvironment webHostEnvironment)
 {
+	private readonly string _csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "recommendations", "movies.csv");
+
 	private List<MovieData> _allMovies;
-	private float? _selectedMovieId;
-	private string _selectedMovieTitle;
 	private List<SimilarMovie> _similarMovies;
+	private List<MovieVector> _movieVectors;
+	private float? _selectedMovieId;
+	private string _selectedMovieTitle = string.Empty;
 	private MLContext _mlContext;
 	private IDataView _dataView;
-	private List<MovieVector> _movieVectors;
 
 	protected override void OnInitialized()
 	{
@@ -29,7 +31,7 @@ public partial class MoviesRecommendations(IWebHostEnvironment webHostEnvironmen
 	private void LoadMovies()
 	{
 		_dataView = _mlContext.Data.LoadFromTextFile<MovieData>(
-			path: Path.Combine(webHostEnvironment.WebRootPath, "data", "movies.csv"),
+			path: _csvPath,
 			hasHeader: true,
 			separatorChar: ',',
 			allowQuoting: true);

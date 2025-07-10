@@ -1,18 +1,15 @@
 ﻿using Microsoft.ML.Data;
 
-namespace IntelligentApp.Models.ML_NET;
+namespace IntelligentApp.Models.Recommendations;
 
-public class ArticleRating
+public class ProductRating
 {
 	[LoadColumn(0)]
 	public int UserId { get; set; }
 
 	[LoadColumn(1)]
-	public int ArticleId { get; set; }
+	public int ProductId { get; set; }
 
 	[LoadColumn(2), ColumnName("Label")]
 	public float Rating { get; set; }
-
-	[LoadColumn(3)]
-	public string? Category { get; set; }
 }

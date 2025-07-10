@@ -1,26 +1,25 @@
-﻿using IntelligentApp.Models.ML_NET;
+﻿using IntelligentApp.Models.Recommendations;
 using Microsoft.ML;
 using Microsoft.ML.Trainers;
 
-namespace IntelligentApp.Components.Pages.ML_NET;
+namespace IntelligentApp.Components.Pages.Recommendations;
 
 // Rekomendacja produktów (collaborative)
 public partial class Recommendations(IWebHostEnvironment webHostEnvironment)
 {
-	private int _selectedUserId = 1;
+	private readonly string _csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "recommendations", "product_ratings.csv");
+	private readonly string _modelPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "recommendations", "product_ratings_model.zip");
+	
 	private List<ProductRecommendationResult>? _recommendedProducts;
+	private int _selectedUserId = 1;
 	private string? _trainModelInfo;
 
 	private void TrainModel()
 	{
-		var webRootPath = webHostEnvironment.WebRootPath;
-		var csvPath = Path.Combine(webRootPath, "data", "product_ratings.csv");
-		var modelPath = Path.Combine(webRootPath, "data", "product_ratings_model.zip");
-
 		MLContext mlContext = new();
 
 		var dataView = mlContext.Data.LoadFromTextFile<ProductRating>(
-			path: csvPath,
+			path: _csvPath,
 			hasHeader: true,
 			separatorChar: ',',
 			allowQuoting: true);
@@ -65,7 +64,7 @@ public partial class Recommendations(IWebHostEnvironment webHostEnvironment)
 		var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: "Label", scoreColumnName: "Score");
 
 		// zapisanie wytrenowanego modelu do pliku
-		mlContext.Model.Save(model, split.TrainSet.Schema, modelPath);
+		mlContext.Model.Save(model, split.TrainSet.Schema, _modelPath);
 
 		_trainModelInfo = "Model został wytrenowany i zapisany do pliku.";
 	}
@@ -94,14 +93,12 @@ public partial class Recommendations(IWebHostEnvironment webHostEnvironment)
 
 	private float Predict(int userId, int productId)
 	{
-		var modelPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "product_ratings_model.zip");
-
-		if (!File.Exists(modelPath))
+		if (!File.Exists(_modelPath))
 		{
 			return 0;
 		}
 
-		using var stream = File.OpenRead(modelPath);
+		using var stream = File.OpenRead(_modelPath);
 
 		MLContext mlContext = new();
 

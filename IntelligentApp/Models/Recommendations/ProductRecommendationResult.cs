@@ -1,4 +1,4 @@
-﻿namespace IntelligentApp.Models.ML_NET;
+﻿namespace IntelligentApp.Models.Recommendations;
 
 // pomocnicza klasa do wyświetlania wyników predykcji
 public class ProductRecommendationResult

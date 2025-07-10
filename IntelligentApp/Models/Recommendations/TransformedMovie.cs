@@ -1,4 +1,4 @@
-﻿namespace IntelligentApp.Models.ML_NET;
+﻿namespace IntelligentApp.Models.Recommendations;
 
 // wyświetlenie każdego filmu w postaci tablicy wektorów, czyli to są cechy zamienione na wektory
 public class TransformedMovie

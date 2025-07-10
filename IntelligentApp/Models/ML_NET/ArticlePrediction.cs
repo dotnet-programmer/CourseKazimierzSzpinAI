@@ -2,9 +2,8 @@
 
 namespace IntelligentApp.Models.ML_NET;
 
-// klasa predykcji gdzie będzie wynik prawdopodobieństwa
 public class ArticlePrediction
 {
 	[ColumnName("Score")]
-	public float Score { get; set; }
+	public float PredictedViews { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿namespace IntelligentApp.Models.ML_NET;
+﻿namespace IntelligentApp.Models.Recommendations;
 
 // do wyświetlenia podobnego filmu
 // dla danego filmu Movie będzie wyświetlała podobieństwo Similarity

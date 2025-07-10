@@ -67,8 +67,8 @@ public partial class SimpleRegression(IWebHostEnvironment webHostEnvironment)
 		};
 
 		// input - ArticleData
-		// output - ArticlePredtiction
-		var predEngine = mlContext.Model.CreatePredictionEngine<ArticleData, ArticlePredtiction>(model);
+		// output - ArticlePrediction
+		var predEngine = mlContext.Model.CreatePredictionEngine<ArticleData, ArticlePrediction>(model);
 
 		// uruchomienie silnika na przykładzie sample
 		var result = predEngine.Predict(sample);
@@ -134,7 +134,7 @@ public partial class SimpleRegression(IWebHostEnvironment webHostEnvironment)
 			AuthorExperience = _authorExperience
 		};
 
-		var predEngine = mlContext.Model.CreatePredictionEngine<ArticleData, ArticlePredtiction>(model);
+		var predEngine = mlContext.Model.CreatePredictionEngine<ArticleData, ArticlePrediction>(model);
 		var result = predEngine.Predict(sample);
 
 		_result = $"Przewidywana liczba wyświetleń: {result.PredictedViews}";

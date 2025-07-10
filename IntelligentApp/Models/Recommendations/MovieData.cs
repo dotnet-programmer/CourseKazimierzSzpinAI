@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace IntelligentApp.Models.ML_NET;
+namespace IntelligentApp.Models.Recommendations;
 
 // do mapowania obiektów w C# z pliku .csv
 public class MovieData

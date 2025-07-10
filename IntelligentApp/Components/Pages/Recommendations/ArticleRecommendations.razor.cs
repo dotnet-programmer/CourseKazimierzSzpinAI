@@ -1,26 +1,26 @@
-﻿using IntelligentApp.Models.ML_NET;
+﻿using IntelligentApp.Models.Recommendations;
 using Microsoft.ML;
 using Microsoft.ML.Trainers;
 
-namespace IntelligentApp.Components.Pages.ML_NET;
+namespace IntelligentApp.Components.Pages.Recommendations;
 
 // Rekomendacja artykułów (collaborative + podział na kategorie (propozycje tylko z 1 wybranej kategorii))
 // na podstawie Id użytkownika oraz wybranej kategorii zwróci najbardziej rekomendowane artykuły
 // plik article_ratings.csv zawiera Id użytkownika, Id artykułu, ocenę (opisaną jako Label) i jeszcze kategoria, ale bez opisu w 1 wierszu
 public partial class ArticleRecommendations(IWebHostEnvironment webHostEnvironment)
 {
-	private string _trainModelInfo = "";
-	private string _webRootPath = "";
+	private readonly string _csvPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "recommendations", "article_ratings.csv");
+	private readonly string _modelPath = Path.Combine(webHostEnvironment.WebRootPath, "data", "recommendations", "article_ratings_model.zip");
+
+	private List<ArticleRecommendationResult> _recommendedArticle = [];
+	private List<string?> _availableCategories = [];
+	private List<ArticleRating> _allArticles = [];
+	private string _trainModelInfo = string.Empty;
 	private string _selectedCategory = "Programming";
 	private int _selectedUserId = 1;
-	private List<ArticleRecommendationResult> _recommendedArticle;
-	private List<string> _availableCategories = [];
-	private List<ArticleRating> _allArticles = [];
 
 	protected override void OnInitialized()
 	{
-		_webRootPath = webHostEnvironment.WebRootPath;
-
 		_allArticles = LoadCsvData();
 
 		_availableCategories = _allArticles
@@ -32,16 +32,14 @@ public partial class ArticleRecommendations(IWebHostEnvironment webHostEnvironme
 
 	private List<ArticleRating> LoadCsvData()
 	{
-		var csvPath = Path.Combine(_webRootPath, "data", "article_ratings.csv");
-
 		List<ArticleRating> ratings = [];
 
-		if (!File.Exists(csvPath))
+		if (!File.Exists(_csvPath))
 		{
 			return ratings;
 		}
 
-		var lines = File.ReadAllLines(csvPath).Skip(1);
+		var lines = File.ReadAllLines(_csvPath).Skip(1);
 
 		foreach (var line in lines)
 		{
@@ -65,13 +63,10 @@ public partial class ArticleRecommendations(IWebHostEnvironment webHostEnvironme
 
 	private void TrainModel()
 	{
-		var csvPath = Path.Combine(_webRootPath, "data", "article_ratings.csv");
-		var modelPath = Path.Combine(_webRootPath, "data", "article_ratings_model.zip");
-
 		MLContext mlContext = new();
 
 		var dataView = mlContext.Data.LoadFromTextFile<ArticleRating>(
-			path: csvPath,
+			path: _csvPath,
 			hasHeader: true,
 			separatorChar: ',',
 			allowQuoting: true);
@@ -96,7 +91,7 @@ public partial class ArticleRecommendations(IWebHostEnvironment webHostEnvironme
 		var predictions = model.Transform(split.TestSet);
 		var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: "Label", scoreColumnName: "Score");
 
-		mlContext.Model.Save(model, split.TrainSet.Schema, modelPath);
+		mlContext.Model.Save(model, split.TrainSet.Schema, _modelPath);
 
 		_trainModelInfo = "Model został wytrenowany i zapisany do pliku.";
 	}
@@ -127,14 +122,12 @@ public partial class ArticleRecommendations(IWebHostEnvironment webHostEnvironme
 
 	private float Predict(int userId, int articleId)
 	{
-		var modelPath = Path.Combine(_webRootPath, "data", "article_ratings_model.zip");
-
-		if (!File.Exists(modelPath))
+		if (!File.Exists(_modelPath))
 		{
 			return 0;
 		}
 
-		using var stream = File.OpenRead(modelPath);
+		using var stream = File.OpenRead(_modelPath);
 
 		MLContext mlContext = new();
 		var model = mlContext.Model.Load(stream, out var inputSchema);
