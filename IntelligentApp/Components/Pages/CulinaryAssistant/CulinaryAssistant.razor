@@ -97,7 +97,7 @@
                             <td>@meal.Carbs</td>
                             <td>@meal.Fats</td>
                             <td>
-                                <button class="btn btn-sm btn-success" @onclick="() => GenerateRecipe(meal)">Wygeneruj przepis</button>
+                                <button class="btn btn-sm btn-success" @onclick="() => GenerateRecipeAsync(meal)">Wygeneruj przepis</button>
                             </td>
                         </tr>
                     }
@@ -117,6 +117,14 @@
                     }
                 </ol>
             </div>
+            @if (_audioDataUrl != null)
+            {
+                <p class="mt-3">Wygenerowany dźwięk:</p>
+                <audio controls class="mb-5">
+                    <source src="@_audioDataUrl" type="audio/wav" />
+                    Przeglądarka nie obsługuje elementu audio.
+                </audio>
+            }
         }
         else if (_isLoading)
         {

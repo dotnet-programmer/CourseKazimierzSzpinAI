@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace IntelligentApp.Components.Pages.CulinaryAssistant;
 
-public partial class CulinaryAssistant(IFileService fileService, IAzureVisionHttpRepository azureVision, IOpenAiHttpRepository openAi)
+public partial class CulinaryAssistant(IFileService fileService, IAzureVisionHttpRepository azureVision, IOpenAiHttpRepository openAi, IAzureSpeechHttpRepository azureSpeech)
 {
 	// do wyświetlenia wybranego zdjecia na widoku bez zapisywania go na dysku
 	private string? _imageDataUrl;
@@ -34,6 +34,9 @@ public partial class CulinaryAssistant(IFileService fileService, IAzureVisionHtt
 
 	// wyświetlenie przepisu dla wybranego dania jako lista stringów (lista kroków do wykonania)
 	private List<string> _recipeForTheMeal = [];
+
+	// URL do pliku audio wyświetlany na widoku w elemencie audio
+	private string? _audioDataUrl;
 
 	protected override void OnInitialized() 
 		=> _availableMealTypes = [
@@ -264,7 +267,7 @@ Odpowiedz w języku polskim.";
 		return meals;
 	}
 
-	private async Task GenerateRecipe(Meal? mealToPrepare)
+	private async Task GenerateRecipeAsync(Meal? mealToPrepare)
 	{
 		if (_suggestedMeals == null || _suggestedMeals.Count == 0 || mealToPrepare == null)
 		{
@@ -301,6 +304,8 @@ Odpowiedz w języku polskim.";
 				.Where(s => !string.IsNullOrWhiteSpace(s));
 
 			_recipeForTheMeal.AddRange(recipeForTheDish);
+
+			await SynthesizeSpeechAsync(string.Join(".<break time='2s'/>", _recipeForTheMeal));
 		}
 		catch (Exception ex)
 		{
@@ -309,6 +314,26 @@ Odpowiedz w języku polskim.";
 		finally
 		{
 			_isLoading = false;
+		}
+	}
+
+	private async Task SynthesizeSpeechAsync(string text)
+	{
+		_audioDataUrl = null;
+
+		try
+		{
+			var audioData = await azureSpeech.GetVoiceAsync(text);
+
+			if (audioData != null)
+			{
+				_audioDataUrl = fileService.GetBase64String("audio/wav", audioData);
+			}
+		}
+		catch (Exception)
+		{
+			//logowanie
+			throw;
 		}
 	}
 }
