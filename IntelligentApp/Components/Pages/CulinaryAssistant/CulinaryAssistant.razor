@@ -83,24 +83,45 @@
                         <th>Białko</th>
                         <th>Węglowodany</th>
                         <th>Tłuszcze</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var dish in _suggestedMeals)
+                    @foreach (var meal in _suggestedMeals)
                     {
                         <tr>
-                            <td>@dish.Name</td>
-                            <td>@dish.PreparationTime</td>
-                            <td>@dish.Calories</td>
-                            <td>@dish.Protein</td>
-                            <td>@dish.Carbs</td>
-                            <td>@dish.Fats</td>                            
+                            <td>@meal.Name</td>
+                            <td>@meal.PreparationTime</td>
+                            <td>@meal.Calories</td>
+                            <td>@meal.Protein</td>
+                            <td>@meal.Carbs</td>
+                            <td>@meal.Fats</td>
+                            <td>
+                                <button class="btn btn-sm btn-success" @onclick="() => GenerateRecipe(meal)">Wygeneruj przepis</button>
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
         <hr />
+        <p class="mt-5 mb-5">Kliknij przycisk "Wygeneruj przepis" dla wybranego dania.</p>
+        if (_recipeForTheMeal != null && _recipeForTheMeal.Any())
+        {
+            <div class="mt-5">
+                <label class="form-label">Przepis:</label>
+                <ol>
+                    @foreach (var item in _recipeForTheMeal)
+                    {
+                        <li>@item</li>
+                    }
+                </ol>
+            </div>
+        }
+        else if (_isLoading)
+        {
+            <p class="mt-5 mb-5">Generowanie przepisu, proszę czekać...</p>
+        }
     }
     else if (_isLoading)
     {

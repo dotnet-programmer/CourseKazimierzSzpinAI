@@ -32,18 +32,16 @@ public partial class CulinaryAssistant(IFileService fileService, IAzureVisionHtt
 	// lista z proponowanymi daniami
 	private List<Meal> _suggestedMeals = [];
 
+	// wyświetlenie przepisu dla wybranego dania jako lista stringów (lista kroków do wykonania)
+	private List<string> _recipeForTheMeal = [];
 
-	protected override void OnInitialized()
-	{
-		_availableMealTypes = [
+	protected override void OnInitialized() 
+		=> _availableMealTypes = [
 			new() { Id = "breakfast", Name = "Śniadanie" },
 			new() { Id = "lunch", Name = "Obiad" },
 			new() { Id = "dinner", Name = "Kolacja" },
 			new() { Id = "dessert", Name = "Deser" },
 		];
-
-		_selectedMealTypeId = _availableMealTypes.FirstOrDefault()?.Id;
-	}
 
 	// zdarzenie wywołane po wyborze pliku na widoku
 	private async Task OnFileSelectedAsync(InputFileChangeEventArgs e)
@@ -264,5 +262,53 @@ Odpowiedz w języku polskim.";
 		}
 
 		return meals;
+	}
+
+	private async Task GenerateRecipe(Meal? mealToPrepare)
+	{
+		if (_suggestedMeals == null || _suggestedMeals.Count == 0 || mealToPrepare == null)
+		{
+			return;
+		}
+
+		_isLoading = true;
+		_recipeForTheMeal.Clear();
+
+		try
+		{
+			var ingredients = string.Join(",", _ingredients);
+
+			var prompt = $@"
+Przesyłam Ci następujące dane:
+
+Lista składników: '{ingredients}'
+Nazwa dania: '{mealToPrepare.Name}'
+Szacunkowy czas przygotowania: '{mealToPrepare.PreparationTime} minut'
+Szacunkowa ilość kalorii: '{mealToPrepare.Calories} kcal'
+
+Twoim zadaniem jest wygenerowanie przepisu krok po kroku na przygotowanie powyższego dania. Każdy krok przepisu oddziel od siebie znakiem gwiazdki *. Pamiętaj, że możesz użyć tylko składników z przesłanej listy. Zwróć tylko przepis, bez dodatkowych komentarzy ani opisu.
+
+Przykładowy format wyjścia:
+*Zbierz wszystkie składniki.*Umyj owoce*Włóż owoce do kosza.
+
+Odpowiedz w języku polskim.";
+
+			var openAiAnswer = await openAi.AskOpenAiAsync(prompt);
+
+			var recipeForTheDish = openAiAnswer
+				.Split("*", StringSplitOptions.RemoveEmptyEntries)
+				.Select(s => s.Trim())
+				.Where(s => !string.IsNullOrWhiteSpace(s));
+
+			_recipeForTheMeal.AddRange(recipeForTheDish);
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Błąd podczas generowania przepisu: {ex.Message}");
+		}
+		finally
+		{
+			_isLoading = false;
+		}
 	}
 }
