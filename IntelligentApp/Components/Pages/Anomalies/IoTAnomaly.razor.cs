@@ -31,7 +31,7 @@ public partial class IoTAnomaly(IWebHostEnvironment webHostEnvironment)
 			.Append(mlContext.AnomalyDetection.Trainers.RandomizedPca(
 				// kolumna z cechami (dane wejściowe do analizy)
 				featureColumnName: "Features",
-				// liczba głównych składowych, im tutaj jest mniej tym bardziej to uogólnia dane
+				// liczba głównych składowych, im tutaj jest mniej tym bardziej to uogólnia dane, ale musi być większy lub równy ilości cech wejsciowych (tutaj 4)
 				rank: 2
 			));
 

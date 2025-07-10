@@ -1,0 +1,46 @@
+﻿@page "/fraud-detection"
+
+<PageTitle>Fraud Detection (K-Means)</PageTitle>
+
+<h3>Fraud Detection (K-Means)</h3>
+<p>
+    W tym przykładzie trenujemy k-Means z 1 klastrem na podstawie kolumny <strong>Amount</strong>.
+    Następnie wyliczamy odległość transakcji od centroidu i na jej podstawie sami
+    decydujemy, czy uznać punkt za anomalię (powyżej ustalonego progu).
+</p>
+
+<button class="btn btn-primary" @onclick="DetectFraud">Wykryj podejrzane transakcje</button>
+
+@if (_results != null && _results.Any())
+{
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>TransactionId</th>
+                <th>Amount</th>
+                <th>Distance</th>
+                <th>IsAnomaly (Threshold @Threshold)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in _results)
+            {
+                <tr>
+                    <td>@result.TransactionId</td>
+                    <td>@result.Amount</td>
+                    <td>@result.Distance</td>
+                    <td>
+                        @if (result.IsAnomaly)
+                        {
+                            <span class="text-danger"><strong>TAK</strong></span>
+                        }
+                        else
+                        {
+                            <span>Nie</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
