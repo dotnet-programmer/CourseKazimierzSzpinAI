@@ -52,6 +52,58 @@
         <button class="btn btn-secondary mt-3" @onclick="AddIngredient">Dodaj</button>
     </div>
 </div>
-
 <hr />
-
+@if (_ingredients != null && _ingredients.Any())
+{
+    <p class="mt-5">Wybierz rodzaj dania, a następnie kliknij "Zaproponuj dania", aby otrzymać listę proponowanych dań z Twoich składników.</p>
+    <div class="mb-3 mt-3">
+        <label class="mb-2">Wybierz rodzaj dania:</label>
+        <select class="form-select" @bind="_selectedMealTypeId">
+            <option value="">-- Wybierz --</option>
+            @if (_availableMealTypes != null && _availableMealTypes.Any())
+            {
+                @foreach (var item in _availableMealTypes)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <button class="btn btn-primary mb-3" @onclick="SuggestMealsAsync">Zaproponuj dania</button>
+    @if (_suggestedMeals != null && _suggestedMeals.Any())
+    {
+        <div class="mt-3 mb-5">
+            <label class="form-label">Propozycje dań:</label>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nazwa</th>
+                        <th>Czas (min)</th>
+                        <th>Kalorie</th>
+                        <th>Białko</th>
+                        <th>Węglowodany</th>
+                        <th>Tłuszcze</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var dish in _suggestedMeals)
+                    {
+                        <tr>
+                            <td>@dish.Name</td>
+                            <td>@dish.PreparationTime</td>
+                            <td>@dish.Calories</td>
+                            <td>@dish.Protein</td>
+                            <td>@dish.Carbs</td>
+                            <td>@dish.Fats</td>                            
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <hr />
+    }
+    else if (_isLoading)
+    {
+        <p class="mt-3 mb-5">Generowanie propozycji dań, proszę czekać...</p>
+    }
+}
