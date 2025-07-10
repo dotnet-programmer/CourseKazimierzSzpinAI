@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
 using IntelligentApp.HttpRepository.Interfaces;
 using IntelligentApp.Models.AzureAi;
-using IntelligentApp.Models.AzureVision;
 
 namespace IntelligentApp.HttpRepository;
 
@@ -37,27 +36,6 @@ public class AzureAiHttpRepository(HttpClient httpClient) : IAzureAiHttpReposito
 		{
 			return [$"Błąd: {ex.Message}"];
 		}
-	}
-
-	// na podstawie przesłanej tablicy bajtów zwróci informacje o obrazie
-	public async Task<ImageAnalysisResponse?> GetImageInfoAsync(byte[] image)
-	{
-		// parametr features określa co ma zostać zrobione z obrazem
-		// caption - opis obrazu
-		// tags - lista tagów
-		// read - OCR - odczytanie tekstu z obrazu
-		var endpoint = "computervision/imageanalysis:analyze?api-version=2024-02-01&features=caption,tags, read";
-
-		// zawartość żądania to surowe dane binarne
-		using var content = new ByteArrayContent(image);
-		content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-
-		var response = await httpClient.PostAsync(endpoint, content);
-		response.EnsureSuccessStatusCode();
-
-		var responseString = await response.Content.ReadAsStringAsync();
-
-		return JsonSerializer.Deserialize<ImageAnalysisResponse>(responseString);
 	}
 
 	private async Task<List<AnalyzeTextDocument>?> AnalyzeTextAsync(string text, AzureRequestKind requestKind)

@@ -1,4 +1,5 @@
-﻿using IntelligentApp.HttpRepository.Interfaces;
+﻿using IntelligentApp.HttpRepository;
+using IntelligentApp.HttpRepository.Interfaces;
 using IntelligentApp.Models.AzureVision;
 using IntelligentApp.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
@@ -24,7 +25,7 @@ public partial class ImageAnalysis
 	protected IFileReader FileReader { get; set; } = default!;
 
 	[Inject]
-	protected IAzureAiHttpRepository AzureAiHttpRepository { get; set; } = default!;
+	protected IAzureVisionHttpRepository AzureVisionHttpRepository { get; set; } = default!;
 
 	private async Task AnalyzeImageFromServerAsync()
 	{
@@ -47,7 +48,7 @@ public partial class ImageAnalysis
 
 		try
 		{
-			var result = await AzureAiHttpRepository.GetImageInfoAsync(fileBytes);
+			var result = await AzureVisionHttpRepository.GetImageInfoAsync(fileBytes);
 
 			// odczytanie opisu obrazu
 			_description = result?.CaptionResult.Text ?? string.Empty;
@@ -118,7 +119,7 @@ public partial class ImageAnalysis
 
 		try
 		{
-			var result = await AzureAiHttpRepository.GetImageInfoAsync(_selectedFileContent);
+			var result = await AzureVisionHttpRepository.GetImageInfoAsync(_selectedFileContent);
 
 			List<LineData> lines = [];
 

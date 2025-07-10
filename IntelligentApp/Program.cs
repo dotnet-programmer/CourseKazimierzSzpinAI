@@ -17,6 +17,9 @@ var azureSpeechApiKey = builder.Configuration["AzureSpeech:ApiKey"];
 var azureSpeechTTSEndpoint = builder.Configuration["AzureSpeech:TTSEndpoint"];
 var azureSpeechSTTEndpoint = builder.Configuration["AzureSpeech:STTEndpoint"];
 
+var azureVisionApiKey = builder.Configuration["AzureVision:ApiKey"];
+var azureVisionEndpoint = builder.Configuration["AzureVision:Endpoint"];
+
 builder.Services.AddHttpClient("OpenAI", client =>
 {
 	client.BaseAddress = new Uri(openAiEndpoint);
@@ -38,6 +41,11 @@ builder.Services.AddHttpClient("AzureSpeechSTT", client =>
 	client.BaseAddress = new Uri(azureSpeechSTTEndpoint);
 	client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", azureSpeechApiKey);
 });
+builder.Services.AddHttpClient("AzureVision", client =>
+{
+	client.BaseAddress = new Uri(azureVisionEndpoint);
+	client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", azureVisionApiKey);
+});
 
 // dodatkowa konfiguracja umo¿liwiaj¹ca korzystanie w repozytoriach z HttpClient bezpoœrednio
 builder.Services.AddScoped<IOpenAiHttpRepository, OpenAiHttpRepository>(sp =>
@@ -58,6 +66,12 @@ builder.Services.AddScoped<IAzureSpeechHttpRepository, AzureSpeechHttpRepository
 	var httpClientTTS = httpClientFactory.CreateClient("AzureSpeechTTS");
 	var httpClientSTT = httpClientFactory.CreateClient("AzureSpeechSTT");
 	return new AzureSpeechHttpRepository(httpClientTTS, httpClientSTT);
+});
+builder.Services.AddScoped<IAzureVisionHttpRepository, AzureVisionHttpRepository>(sp =>
+{
+	var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+	var httpClient = httpClientFactory.CreateClient("AzureVision");
+	return new AzureVisionHttpRepository(httpClient);
 });
 
 builder.Services.AddScoped<IFileReader, FileReaderService>();
