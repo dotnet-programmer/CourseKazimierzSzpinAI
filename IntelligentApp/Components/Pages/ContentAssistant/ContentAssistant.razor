@@ -38,3 +38,8 @@
     <button class="btn btn-sm btn-danger" @onclick="ChangeNameAsync">Zmień nazwę</button>
     <button class="btn btn-sm btn-danger" @onclick="ChangeDescriptionAsync">Zmień opis</button>
 }
+@if (_imageDataUrl != null)
+{
+    <h4 class="mt-3">Zdjęcie:</h4>
+    <img src="@_imageDataUrl" alt="zdjęcie produktu" style="display: block;max-width:256px;max-height:256px; margin-bottom: 3rem;" />
+}

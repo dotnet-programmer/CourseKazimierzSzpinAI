@@ -78,4 +78,26 @@ public class OpenAiHttpRepository(HttpClient httpClient) : IOpenAiHttpRepository
 			return $"Błąd: {ex.Message}";
 		}
 	}
+
+	public async Task<string> GenerateImageAsync(string prompt, int count = 1, string size = "256x256")
+	{
+		try
+		{
+			var requestBody = new
+			{
+				prompt = prompt,
+				n = count,
+				size = size
+			};
+
+			using var response = await httpClient.PostAsJsonAsync("https://api.openai.com/v1/images/generations", requestBody);
+			response.EnsureSuccessStatusCode();
+			var jsonResponse = await response.Content.ReadFromJsonAsync<ImageGenerationResponse>();
+			return jsonResponse?.Data?.FirstOrDefault()?.Url ?? string.Empty;
+		}
+		catch (Exception ex)
+		{
+			return $"Błąd: {ex.Message}";
+		}
+	}
 }
