@@ -9,4 +9,5 @@ public interface IFileService
 	Task<byte[]> ReadInputAsBytesAsync(IBrowserFile file);
 	string GetBase64String(string contentType, byte[] selectedFileContent);
 	string GetFilePath(params string[] paths);
+	Task<byte[]> ConvertWebmToWavAsync(byte[] webmBytes);
 }

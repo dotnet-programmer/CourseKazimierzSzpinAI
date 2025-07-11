@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using IntelligentApp.HttpRepository.Interfaces;
+﻿using IntelligentApp.HttpRepository.Interfaces;
 using IntelligentApp.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -63,8 +62,8 @@ public partial class VoiceAssistant
 		_audioDataUrl = null;
 
 		// przed wysłaniem pliku audio trzeba przekonwertować go np. do formatu WAV
-		var wavFile = await ConvertWebmToWavAsync(_selectedAudio);
-
+		var wavFile = await FileService.ConvertWebmToWavAsync(_selectedAudio);
+		
 		_transcript = await AzureSpeechHttpRepository.GetTextAsync(wavFile);
 
 		if (_transcript == null)
@@ -88,79 +87,5 @@ public partial class VoiceAssistant
 		}
 
 		_isLoading = false;
-	}
-
-	// żeby metoda działałą, potrzebny plik wwwroot/ffmpeg/ffmpeg.exe
-	private async Task<byte[]> ConvertWebmToWavAsync(byte[] webmBytes)
-	{
-		// tymczasowe zapisanie pliku na dysku w formacie .webm w wwwroot
-		var tempWebmPath = FileService.GetFilePath($"{Guid.NewGuid()}.webm");
-
-		// tymczasowa ścieżka docelowa, czyli gdzie będzie przekonwertowany plik .wav
-		var tempWavPath = FileService.GetFilePath($"{Guid.NewGuid()}.wav");
-
-		// ścieżka do pliku ffmpeg.exe
-		var ffmpegPath = FileService.GetFilePath("ffmpeg", $"ffmpeg.exe");
-
-		try
-		{
-			// zapisanie oryginalnego pliku .webm pod tymczasową ścieżką
-			await File.WriteAllBytesAsync(tempWebmPath, webmBytes);
-
-			// komenda wywoływana w cmd, czyli konwersja z .webm na .wav i zapisanie pod nową tymczasową ścieżką
-			var ffmpegArgs = $"-i \"{tempWebmPath}\" -acodec pcm_s16le -ac 1 -ar 16000 \"{tempWavPath}\"";
-
-			// komendę trzeba wywołać w nowym procesie, dodatkowo przekazanie argumentów w obiekcie ProcessStartInfo
-			ProcessStartInfo startInfo = new()
-			{
-				// nazwa pliku który ma zostać uruchomiony
-				FileName = ffmpegPath,
-
-				// argumenty uruchomieniowe, czyli komenda która zostanie wywołana
-				Arguments = ffmpegArgs,
-				CreateNoWindow = true,
-				UseShellExecute = false,
-				RedirectStandardOutput = true,
-				RedirectStandardError = true
-			};
-			using Process process = new() { StartInfo = startInfo };
-			process.Start();
-
-			// do sprawdzenia, czy wystąpiły jakieś błędy podczas uruchomienia procesu
-			var stdOutput = await process.StandardOutput.ReadToEndAsync();
-			var stdError = await process.StandardError.ReadToEndAsync();
-
-			// czekanie aż zakończy się wykonywanie procesu
-			await process.WaitForExitAsync();
-
-			// jeżeli coś poszło nie tak
-			if (process.ExitCode != 0)
-			{
-				Console.WriteLine("ffmpeg error output: " + stdError);
-				throw new Exception($"ffmpeg failed with exit code {process.ExitCode}");
-			}
-
-			// sprawdzenie czy został utworzony nowy plik .wav
-			if (!File.Exists(tempWavPath))
-			{
-				throw new FileNotFoundException($"ffmpeg output not found: {tempWavPath}");
-			}
-
-			// zwrócenie nowego pliku .wav jako tablica bajtów
-			return await File.ReadAllBytesAsync(tempWavPath);
-		}
-		// usunięcie plików tymczasowych
-		finally
-		{
-			if (File.Exists(tempWebmPath))
-			{
-				File.Delete(tempWebmPath);
-			}
-
-			if (File.Exists(tempWavPath))
-			{
-				File.Delete(tempWavPath);
-			}
-		}
 	}
 }
