@@ -10,4 +10,5 @@ public interface IFileService
 	string GetBase64String(string contentType, byte[] selectedFileContent);
 	string GetFilePath(params string[] paths);
 	Task<byte[]> ConvertWebmToWavAsync(byte[] webmBytes);
+	Task LogConversationAsync(string userPrompt, string aiResponse);
 }

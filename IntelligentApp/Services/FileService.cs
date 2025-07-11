@@ -122,4 +122,11 @@ public class FileService(IWebHostEnvironment webHostEnv) : IFileService
 			}
 		}
 	}
+
+	public async Task LogConversationAsync(string userPrompt, string aiResponse)
+	{
+		var logLine = $"{DateTime.UtcNow};\"{userPrompt}\";\"{aiResponse}\"{Environment.NewLine}";
+		var logFilePath = Path.Combine(_webRootPath, "data", "openai", "history.csv");
+		await File.AppendAllTextAsync(logFilePath, logLine);
+	}
 }

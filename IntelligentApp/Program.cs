@@ -7,18 +7,18 @@ using IntelligentApp.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var openAiApiKey = builder.Configuration["OpenAI:ApiKey"];
-var openAiEndpoint = builder.Configuration["OpenAI:Endpoint"];
+var openAiApiKey = builder.Configuration["OpenAI:ApiKey"] ?? throw new Exception("Brak klucza OpenAI:ApiKey w appsettings.json");
+var openAiEndpoint = builder.Configuration["OpenAI:Endpoint"] ?? throw new Exception("Brak klucza OpenAI:Endpoint w appsettings.json");
 
-var azureApiKey = builder.Configuration["AzureAI:ApiKey"];
-var azureEndpoint = builder.Configuration["AzureAI:Endpoint"];
+var azureApiKey = builder.Configuration["AzureAI:ApiKey"] ?? throw new Exception("Brak klucza AzureAI:ApiKey w appsettings.json");
+var azureEndpoint = builder.Configuration["AzureAI:Endpoint"] ?? throw new Exception("Brak klucza AzureAI:Endpoint w appsettings.json");
 
-var azureSpeechApiKey = builder.Configuration["AzureSpeech:ApiKey"];
-var azureSpeechTTSEndpoint = builder.Configuration["AzureSpeech:TTSEndpoint"];
-var azureSpeechSTTEndpoint = builder.Configuration["AzureSpeech:STTEndpoint"];
+var azureSpeechApiKey = builder.Configuration["AzureSpeech:ApiKey"] ?? throw new Exception("Brak klucza AzureSpeech:ApiKey w appsettings.json");
+var azureSpeechTTSEndpoint = builder.Configuration["AzureSpeech:TTSEndpoint"] ?? throw new Exception("Brak klucza AzureSpeech:TTSEndpoint w appsettings.json");
+var azureSpeechSTTEndpoint = builder.Configuration["AzureSpeech:STTEndpoint"] ?? throw new Exception("Brak klucza AzureSpeech:STTEndpoint w appsettings.json");
 
-var azureVisionApiKey = builder.Configuration["AzureVision:ApiKey"];
-var azureVisionEndpoint = builder.Configuration["AzureVision:Endpoint"];
+var azureVisionApiKey = builder.Configuration["AzureVision:ApiKey"] ?? throw new Exception("Brak klucza AzureVision:ApiKey w appsettings.json");
+var azureVisionEndpoint = builder.Configuration["AzureVision:Endpoint"] ?? throw new Exception("Brak klucza AzureVision:Endpoint w appsettings.json");
 
 builder.Services.AddHttpClient("OpenAI", client =>
 {

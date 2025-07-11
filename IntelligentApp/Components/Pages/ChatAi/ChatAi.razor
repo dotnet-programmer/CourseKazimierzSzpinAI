@@ -1,0 +1,26 @@
+﻿@page "/chat"
+
+<PageTitle>Chat z AI</PageTitle>
+
+<h3>Chat z AI</h3>
+<div class="mb-3">
+    <label class="mb-2">Wybierz prompt:</label>
+    <select class="form-select" @onchange="OnPromptSelected">
+        <option>-- Wybierz --</option>
+        @foreach (var item in _availablePrompts)
+        {
+            <option value="@item">@item</option>
+        }
+    </select>
+</div>
+<textarea class="form-control mb-3" @bind="_currentPrompt" rows="3" placeholder="Wpisz swoje pytanie..."></textarea>
+<button class="btn btn-primary" @onclick="SendPromptAsync">Wyślij</button>
+<div class="mt-5">
+    <h4>Historia rozmowy:</h4>
+    <ul>
+        @foreach (var msg in _messages)
+        {
+            <li><b>@msg.Role:</b> @msg.Content</li>
+        }
+    </ul>
+</div>

@@ -18,6 +18,7 @@ public class OpenAiHttpRepository(HttpClient httpClient) : IOpenAiHttpRepository
 				model = aiModel,
 
 				// wiadomości do AI
+				// jest to tablica obiektów reprezentująca wypowiedzi konwersacji
 				messages = new[]
 				{
 					// można wskazać różną rolę wiadomości, np. system, user, assistant
@@ -29,7 +30,10 @@ public class OpenAiHttpRepository(HttpClient httpClient) : IOpenAiHttpRepository
 				},
 
 				// liczba tokenów jaką może wygenerować model w odpowiedzi, wpływa to na długość odpowiedzi i cenę usługi
-				max_tokens = maxTokens
+				max_tokens = maxTokens,
+
+				// wartość kontrolująca kreatywność/generatywność modelu, im wyższa wartość, tym bardziej twórcza odpowiedź, ale mniej deterministyczna
+                temperature = 0.7
 			};
 
 			// jako parametr podanie nazwy klienta HTTP zdefiniowanego w Program.cs w AddHttpClient()
