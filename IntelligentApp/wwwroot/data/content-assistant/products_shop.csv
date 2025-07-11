@@ -1,0 +1,51 @@
+ProductId,Name,Description
+1,Buty biegowe React Sprint,Lekkie buty przeznaczone do biegów sprinterskich i długodystansowych
+2,Buty trekkingowe Mountain Trek,Wytrzymałe obuwie do pieszych wędrówek w trudnym terenie
+3,Koszulka piłkarska Striker Pro,Oddychający materiał, idealny do intensywnych treningów piłkarskich
+4,Koszulka fitness FitMotion,Elastyczna koszulka zaprojektowana dla różnych form aktywności
+5,Spodenki biegowe AeroRun,Komfortowe i przewiewne spodenki do biegów w ciepłe dni
+6,Bluza treningowa WarmFlex,Bluza z technologią odprowadzania wilgoci, zapewniająca ciepło i suchość
+7,Skarpety kompresyjne RunSupport,Wspomagają krążenie i przyspieszają regenerację podczas biegania
+8,Piłka nożna Fusion Strike,Wytrzymała piłka o oficjalnych wymiarach, z wysoką przyczepnością
+9,Piłka do koszykówki Street Hoops,Piłka przeznaczona do gry na asfalcie i betonie, odporna na ścieranie
+10,Rakieta tenisowa ProAce,Lekka rakieta z dużym sweet spotem, idealna dla średnio zaawansowanych graczy
+11,Koszulka rowerowa AeroCycling,Dopasowany krój i wentylacja zapewniają komfort na długich trasach
+12,Rower górski TrailMaster,Solidna rama i amortyzacja przystosowane do jazdy w terenie
+13,Rower szosowy SpeedRide,Lekka konstrukcja przeznaczona do szybkiej jazdy po asfalcie
+14,Plecak treningowy GymPack,Pojemny plecak na sprzęt sportowy z dodatkowymi kieszeniami
+15,Ręcznik szybkoschnący DryFit,Lekki ręcznik z mikrofibry doskonały na treningi i podróże
+16,Czepek pływacki AquaCap,Elastyczny czepek z silikonu, chroniący włosy podczas pływania
+17,Okularki pływackie ClearView,Zapewniają szerokie pole widzenia i ochronę przed zaparowaniem
+18,Buty piłkarskie SpeedKick,Korki zaprojektowane pod dynamiczne zwroty i silne strzały
+19,Kij do unihokeja FloorMaster,Wytrzymały kij z ergonomicznym chwytem
+20,Czapka z daszkiem SportShade,Chroni przed słońcem i odprowadza wilgoć w upalne dni
+21,Zegarek sportowy TimeTrack,Monitoruje dystans, spalone kalorie i tętno
+22,Hantle regulowane PowerAdjust,Możliwość szybkiej zmiany obciążenia, idealne do domowego treningu
+23,Mata fitness HomeGym,Antypoślizgowa mata do ćwiczeń pilates, jogi i treningów ogólnych
+24,Pompka do piłek ProPump,Uniwersalna pompka z igłą do piłek różnych rozmiarów
+25,Buty do siatkówki VolleyAir,Zapewniają stabilizację stawu skokowego i przyczepność na parkiecie
+26,Strój kąpielowy SwimFit,Jednoczęściowy kostium ze wzmocnieniem w okolicy brzucha
+27,Taśma do ćwiczeń FlexBand,Elastyczna taśma o zmiennym oporze do treningu siłowego
+28,Pas do biegania RaceBelt,Lekki pas z kieszenią na telefon, klucze i bidon
+29,Kurtka przeciwwiatrowa WindGuard,Ultralekka i kompaktowa kurtka chroniąca przed wiatrem
+30,Kamizelka odblaskowa NightRun,Poprawia widoczność i bezpieczeństwo podczas biegania po zmroku
+31,Buty halowe IndoorPro,Bezślizgowa podeszwa zaprojektowana do gier w pomieszczeniach
+32,Piłka do siatkówki BeachSpike,Wodoodporna piłka o zwiększonej wytrzymałości na piasek
+33,Rękawice rowerowe AirGrip,Wyściełane, zapewniają pewny chwyt i wygodę na długich trasach
+34,Kask rowerowy SafeRide,Lekki kask z dobrą wentylacją i regulacją rozmiaru
+35,Bidon termiczny FrostKeep,Utrzymuje temperaturę napoju przez kilka godzin
+36,Opaska na kolano KneeSupport,Stabilizuje staw kolanowy, zapobiegając urazom
+37,Koszulka bokserska FightPro,Lekka, nie krępuje ruchów podczas treningów bokserskich
+38,Rękawice bokserskie PunchMax,Gruba wyściółka dla lepszej ochrony dłoni i nadgarstka
+39,Odważniki na kostki LegWeights,Dodatkowe obciążenie do ćwiczeń wydolnościowych i siłowych
+40,Stoper elektroniczny SpeedTimer,Dokładny pomiar czasu z funkcją pamięci międzyczasów
+41,Płyta balansowa BalanceCore,Pomaga w ćwiczeniach stabilizacyjnych i równowagi
+42,Skakanka SpeedJump,Lekka skakanka do treningu kondycyjnego i koordynacji
+43,Gogle narciarskie SnowView,Ochrona przed promieniowaniem UV i mgłą na stoku
+44,Ciepłe rękawiczki narciarskie AlpineHeat,Zatrzymują ciepło i zabezpieczają przed wilgocią
+45,Buty do koszykówki HighJump,Wysoka cholewka wspiera kostkę przy dynamicznych ruchach
+46,Koszulka rowerowa z długim rękawem AeroLong,Zapewnia ochronę przed chłodem i jednocześnie oddycha
+47,Bluza kompresyjna ThermoFit,Zapewnia wsparcie mięśni i utrzymuje ciepłotę ciała
+48,Torba sportowa MultiCarry,Duża torba z przegródkami na obuwie i odzież
+49,Ochraniacze piłkarskie SafeShin,Lekka konstrukcja chroniąca goleń przy kontakcie z piłką
+50,Piłka ręczna HandMaster,Zewnętrzna warstwa zapewnia pewny chwyt i kontrolę

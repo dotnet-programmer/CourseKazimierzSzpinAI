@@ -1,12 +1,17 @@
-﻿using IntelligentApp.HttpRepository.Interfaces;
+﻿using IntelligentApp.Helpers;
+using IntelligentApp.HttpRepository.Interfaces;
 using IntelligentApp.Models.ContentAssistant;
 using IntelligentApp.Services.Interfaces;
 using Microsoft.JSInterop;
+using Microsoft.ML;
 
 namespace IntelligentApp.Components.Pages.ContentAssistant;
 
 public partial class ContentAssistant(IJSRuntime JS, IFileService fileService, IAzureSpeechHttpRepository azureSpeech, IOpenAiHttpRepository openAi, IAzureAiHttpRepository azureAi)
 {
+	// stała wartość, żeby nowy obiekt odróżniał się od innych
+	private const int NewProductId = -1;
+
 	private bool _isLoading = false;
 	private bool _isRecording = false;
 	private string? _userProductDesc;
@@ -18,6 +23,15 @@ public partial class ContentAssistant(IJSRuntime JS, IFileService fileService, I
 	private List<ChatMessage> _descriptionMessages = [];
 	private string? _imageDataUrl;
 	private List<string> _keyPhrases = [];
+
+	// lista produktów wczytanych z pliku .csv
+	private List<ProductData>? _allProducts;
+
+	// lista wektoró cech dla każdego produktu
+	private List<ProductVector>? _productVectors;
+	
+	// lista z podobnymi produktami, które będą wyświetlane na widoku
+	private List<SimilarProduct>? _similarProducts;
 
 	private async Task StartRecordingAsync()
 	{
@@ -59,6 +73,9 @@ public partial class ContentAssistant(IJSRuntime JS, IFileService fileService, I
 		await GenerateDescriptionAsync();
 		await GenerateImageAsync();
 		await GenerateKeyPhrasesAsync();
+
+		PrepareProductsVectors();
+		ShowRecommendations();
 
 		_isLoading = false;
 	}
@@ -109,5 +126,96 @@ public partial class ContentAssistant(IJSRuntime JS, IFileService fileService, I
 		{
 			_keyPhrases = await azureAi.ExtractKeyPhrasesAsync(_generatedDescription);
 		}
+	}
+
+	private void PrepareProductsVectors()
+	{
+		MLContext mlContext = new();
+
+		var dataView = mlContext.Data.LoadFromTextFile<ProductData>(
+			 path: fileService.GetFilePath("data", "content-assistant", "products_shop.csv"),
+			 hasHeader: true,
+			 separatorChar: ',',
+			 allowQuoting: true);
+
+		// uzupełnienie listy z produktami danymi z pliku .csv
+		_allProducts = mlContext.Data
+		   .CreateEnumerable<ProductData>(dataView, reuseRowObject: false)
+		   .ToList();
+
+		// budowanie listy podobnych produktów do tego nowego produktu, którego jeszcze nie ma w pliku .csv, a więc i w dataView
+		// dlatego trzeba utworzyć nowy obiekt tego produktu i dodać go do listy wszystkich produktów, żeby zbudować jego wektor cech żeby porównywać go z innymi produktami
+		_allProducts.Add(new ProductData
+		{
+			ProductId = NewProductId,
+			Name = _generatedName,
+			Description = _generatedDescription
+		});
+
+		// jeszcze raz tworzy się dataView, tym razem z dołączonym już nowym produktem
+		dataView = mlContext.Data.LoadFromEnumerable(_allProducts);
+
+		var pipeline = mlContext.Transforms
+			// złączenie nazwy i opisu w kolumnie inputu TextInput
+			.Concatenate("TextInput", "Name", "Description")
+			// wprowadzenie inputu w TextInput do transformacji i output będzie w Features
+			.Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Features", inputColumnName: "TextInput"));
+
+		// trenowanie
+		var transform = pipeline.Fit(dataView);
+		
+		// transfromacja
+		var transformData = transform.Transform(dataView);
+
+		// tworzenie tablicy Features, gdzie są tablice floatów, czyli wetory cech
+		var features = mlContext.Data.CreateEnumerable<TransformedProduct>(transformData, reuseRowObject: false);
+
+		// złączenie powstałego wektora cech ze wszystkimi produktami, gdzie wektor cech będzie przypisany do Id produktu
+		_productVectors = features
+			.Zip(_allProducts, (f, m) => new ProductVector
+			{
+				ProductId = m.ProductId,
+				Features = f.Features
+			})
+			.ToList();
+	}
+
+	private void ShowRecommendations()
+		=> _similarProducts = GetSimilarProducts(NewProductId, 3);
+
+	// productId - do tego będą porównywane inne produkty
+	private List<SimilarProduct> GetSimilarProducts(float productId, int topN = 3)
+	{
+		if (_productVectors == null)
+		{
+			return [];
+		}
+
+		// w liście z wektorami przypisanymi do produktów szukany jest produkt z którym będzie porównywanie
+		var targetProduct = _productVectors.FirstOrDefault(m => m.ProductId == productId);
+
+		if (targetProduct == null)
+		{
+			return [];
+		}
+
+		// tutaj będą podobne produkty
+		List<SimilarProduct> similarities = [];
+
+		foreach (var prod in _productVectors)
+		{
+			// bez porównywania tych samych produktów, muszą być zaproponowane inne
+			if (prod.ProductId == productId)
+			{
+				continue;
+			}
+
+			var sim = RecommendationSimilarity.CosineSimilarity(targetProduct.Features, prod.Features);
+
+			var productInfo = _allProducts?.First(x => x.ProductId == prod.ProductId);
+			similarities.Add(new SimilarProduct { Product = productInfo, Similarity = sim });
+		}
+
+		return similarities.OrderByDescending(s => s.Similarity).Take(topN).ToList();
 	}
 }

@@ -54,3 +54,25 @@
         }
     </div>
 }
+@if (_similarProducts != null && _similarProducts.Any())
+{
+    <table class="table mb-5">
+        <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Opis</th>
+                <th>Podobieństwo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var similarProduct in _similarProducts)
+            {
+                <tr>
+                    <td>@similarProduct.Product?.Name</td>
+                    <td>@similarProduct.Product?.Description</td>
+                    <td>@similarProduct.Similarity.ToString("0.00")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
