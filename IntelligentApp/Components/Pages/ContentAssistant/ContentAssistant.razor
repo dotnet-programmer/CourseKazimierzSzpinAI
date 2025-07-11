@@ -43,3 +43,14 @@
     <h4 class="mt-3">Zdjęcie:</h4>
     <img src="@_imageDataUrl" alt="zdjęcie produktu" style="display: block;max-width:256px;max-height:256px; margin-bottom: 3rem;" />
 }
+@if (_keyPhrases.Any())
+{
+    <div class="mt-3 mb-3">
+        @foreach (var item in _keyPhrases)
+        {
+            <span class="alert alert-primary text-center me-2" role="alert">
+                @item
+            </span>
+        }
+    </div>
+}

@@ -5,7 +5,7 @@ using Microsoft.JSInterop;
 
 namespace IntelligentApp.Components.Pages.ContentAssistant;
 
-public partial class ContentAssistant(IJSRuntime JS, IFileService fileService, IAzureSpeechHttpRepository azureSpeech, IOpenAiHttpRepository openAi)
+public partial class ContentAssistant(IJSRuntime JS, IFileService fileService, IAzureSpeechHttpRepository azureSpeech, IOpenAiHttpRepository openAi, IAzureAiHttpRepository azureAi)
 {
 	private bool _isLoading = false;
 	private bool _isRecording = false;
@@ -17,6 +17,7 @@ public partial class ContentAssistant(IJSRuntime JS, IFileService fileService, I
 	private List<ChatMessage> _nameMessages = [];
 	private List<ChatMessage> _descriptionMessages = [];
 	private string? _imageDataUrl;
+	private List<string> _keyPhrases = [];
 
 	private async Task StartRecordingAsync()
 	{
@@ -57,6 +58,7 @@ public partial class ContentAssistant(IJSRuntime JS, IFileService fileService, I
 		await GenerateNameAsync();
 		await GenerateDescriptionAsync();
 		await GenerateImageAsync();
+		await GenerateKeyPhrasesAsync();
 
 		_isLoading = false;
 	}
@@ -99,5 +101,13 @@ public partial class ContentAssistant(IJSRuntime JS, IFileService fileService, I
 	{
 		var dallePrompt = $"Stwórz mi prompta, który mogę wysłać do DALLE, tak żeby zostało wygenerowane ładne zdjęcie mojego produktu o nazwie: {_generatedName}. Opis produktu: {_generatedDescription}. To zdjęcie będę chciał ustawić jako miniaturka w moim sklepie internetowym.";
 		_imageDataUrl = await openAi.GenerateImageAsync(dallePrompt);
+	}
+
+	private async Task GenerateKeyPhrasesAsync()
+	{
+		if (_generatedDescription != null && _generatedDescription.Any())
+		{
+			_keyPhrases = await azureAi.ExtractKeyPhrasesAsync(_generatedDescription);
+		}
 	}
 }
