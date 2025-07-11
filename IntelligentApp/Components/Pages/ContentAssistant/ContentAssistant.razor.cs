@@ -1,4 +1,5 @@
 ﻿using IntelligentApp.HttpRepository.Interfaces;
+using IntelligentApp.Models.ContentAssistant;
 using IntelligentApp.Services.Interfaces;
 using Microsoft.JSInterop;
 
@@ -12,6 +13,9 @@ public partial class ContentAssistant(IJSRuntime JS, IFileService fileService, I
 	private byte[]? _audio;
 	private string? _generatedName;
 	private string? _generatedDescription;
+	private string? _notes;
+	private List<ChatMessage> _nameMessages = [];
+	private List<ChatMessage> _descriptionMessages = [];
 
 	private async Task StartRecordingAsync()
 	{
@@ -62,7 +66,11 @@ Wygeneruj krótką, chwytliwą nazwę produktu na podstawie poniższych informac
 {_userProductDesc}
 Użyj języka polskiego. Podaj tylko samą nazwę, bez dodatkowego wyjaśnienia.";
 
-		_generatedName = await openAi.AskOpenAiAsync(prompt);
+		// dodanie prompta użytkownika do historii rozmowy
+		_nameMessages.Add(new ChatMessage { Role = "user", Content = prompt });
+		_generatedName = await openAi.AskOpenAiWithHistoryAsync(_nameMessages);
+		// dodanie odpowiedzi OpenAi do historii rozmowy
+		_nameMessages.Add(new ChatMessage { Role = "assistant", Content = _generatedName });
 	}
 
 	private async Task GenerateDescriptionAsync()
@@ -74,6 +82,22 @@ Stwórz angażujący, marketingowy opis produktu w języku polskim.
 Napisz w taki sposób, by był atrakcyjny dla potencjalnego klienta.
 Opis ma zawierać około 100 znaków.";
 
-		_generatedDescription = await openAi.AskOpenAiAsync(prompt);
+		_descriptionMessages.Add(new ChatMessage { Role = "user", Content = prompt });
+		_generatedDescription = await openAi.AskOpenAiWithHistoryAsync(_descriptionMessages);
+		_descriptionMessages.Add(new ChatMessage { Role = "assistant", Content = _generatedDescription });
+	}
+
+	private async Task ChangeNameAsync()
+	{
+		_nameMessages.Add(new ChatMessage { Role = "user", Content = _notes });
+		_generatedName = await openAi.AskOpenAiWithHistoryAsync(_nameMessages);
+		_nameMessages.Add(new ChatMessage { Role = "assistant", Content = _generatedName });
+	}
+
+	private async Task ChangeDescriptionAsync()
+	{
+		_descriptionMessages.Add(new ChatMessage { Role = "user", Content = _notes });
+		_generatedDescription = await openAi.AskOpenAiWithHistoryAsync(_descriptionMessages);
+		_descriptionMessages.Add(new ChatMessage { Role = "assistant", Content = _generatedDescription });
 	}
 }

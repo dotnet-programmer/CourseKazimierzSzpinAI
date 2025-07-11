@@ -27,9 +27,14 @@
         <label>Wygenerowana Nazwa:</label>
         <p>@_generatedName</p>
     </div>
-
     <div class="mb-3">
         <label>Wygenerowany Opis:</label>
         <p>@_generatedDescription</p>
     </div>
+    <div class="mb-3">
+        <label for="textInput" class="form-label">Uwagi:</label>
+        <textarea id="textInput" class="form-control" @bind="_notes" rows="3"></textarea>
+    </div>
+    <button class="btn btn-sm btn-danger" @onclick="ChangeNameAsync">Zmień nazwę</button>
+    <button class="btn btn-sm btn-danger" @onclick="ChangeDescriptionAsync">Zmień opis</button>
 }

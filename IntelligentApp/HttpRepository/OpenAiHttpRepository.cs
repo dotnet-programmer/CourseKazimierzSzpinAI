@@ -1,4 +1,5 @@
 ﻿using IntelligentApp.HttpRepository.Interfaces;
+using IntelligentApp.Models.ContentAssistant;
 using IntelligentApp.Models.OpenAi;
 
 namespace IntelligentApp.HttpRepository;
@@ -21,7 +22,7 @@ public class OpenAiHttpRepository(HttpClient httpClient) : IOpenAiHttpRepository
 				{
 					// można wskazać różną rolę wiadomości, np. system, user, assistant
 					// rola system definiuje kontekst wiadomości, to definiuje persone tego asystenta
-					new { role = "system", content = "Jesteś pomocnym asystentem." },
+					//new { role = "system", content = "Jesteś pomocnym asystentem." },
 
 					// faktyczna wiadomość do przekazania od użytkownika
 					new { role = "user", content = prompt }
@@ -45,6 +46,31 @@ public class OpenAiHttpRepository(HttpClient httpClient) : IOpenAiHttpRepository
 			var jsonResponse = await response.Content.ReadFromJsonAsync<ChatCompletionResponse>();
 
 			// wyłuskanie odpowiedzi 
+			return jsonResponse?.Choices?.FirstOrDefault()?.Message?.Content?.Trim() ?? string.Empty;
+		}
+		catch (Exception ex)
+		{
+			return $"Błąd: {ex.Message}";
+		}
+	}
+
+	public async Task<string> AskOpenAiWithHistoryAsync(List<ChatMessage> chatMessages, string aiModel = "gpt-4", int maxTokens = 100, string endpoint = "")
+	{
+		try
+		{
+			var requestBody = new
+			{
+				model = aiModel,
+
+				// żeby zachować kontekst rozmowy trzeba wysłać całą historię rozmowy (wiadomości użytkownika + odpowiedzi czata)
+				messages = chatMessages,
+
+				max_tokens = maxTokens
+			};
+
+			using var response = await httpClient.PostAsJsonAsync(endpoint, requestBody);
+			response.EnsureSuccessStatusCode();
+			var jsonResponse = await response.Content.ReadFromJsonAsync<ChatCompletionResponse>();
 			return jsonResponse?.Choices?.FirstOrDefault()?.Message?.Content?.Trim() ?? string.Empty;
 		}
 		catch (Exception ex)
