@@ -1,4 +1,5 @@
-﻿using IntelligentApp.Models.Recommendations;
+﻿using IntelligentApp.Helpers;
+using IntelligentApp.Models.Recommendations;
 using IntelligentApp.Services.Interfaces;
 using Microsoft.ML;
 
@@ -115,7 +116,7 @@ public partial class MoviesRecommendations(IFileService fileService)
 			// obliczenie podobieństwa
 			// targetMovie.Features - wektor cech z docelowego filmu
 			// movieVector.Features - wektor cech z danej iteracji
-			var sim = CosineSimilarity(targetMovie.Features, movieVector.Features);
+			var sim = RecommendationSimilarity.CosineSimilarity(targetMovie.Features, movieVector.Features);
 
 			// pobranie informacji o filmie z listy
 			var movieInfo = _allMovies.First(x => x.MovieId == movieVector.MovieId);
@@ -126,24 +127,5 @@ public partial class MoviesRecommendations(IFileService fileService)
 
 		// posortowanie i wybranie topN rekordów
 		return similarities.OrderByDescending(x => x.Similarity).Take(topN).ToList();
-	}
-
-	private float CosineSimilarity(float[] vecA, float[] vecB)
-	{
-		var dot = 0f;
-		var magA = 0f;
-		var magB = 0f;
-
-		for (int i = 0; i < vecA.Length; i++)
-		{
-			dot += vecA[i] * vecB[i];
-			magA += vecA[i] * vecA[i];
-			magB += vecB[i] * vecB[i];
-		}
-
-		magA = (float)Math.Sqrt(magA);
-		magB = (float)Math.Sqrt(magB);
-
-		return magA == 0 || magB == 0 ? 0f : dot / (magA * magB);
 	}
 }
